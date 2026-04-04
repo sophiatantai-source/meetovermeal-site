@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MeetOverMeal — Dine Together, Meet Over Meals</title>
+  <meta name="description" content="MeetOverMeal is a social dining app that connects people through shared meals at local restaurants.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Inter', -apple-system, sans-serif; color: #2C241B; background: #FAF7F2; }
+    .hero { text-align: center; padding: 80px 24px 60px; }
+    .hero h1 { font-size: 48px; font-weight: 900; letter-spacing: -1px; color: #2C241B; }
+    .hero h1 span { color: #F59E0B; }
+    .hero p { font-size: 18px; color: #8B7E6E; margin-top: 16px; max-width: 500px; margin-left: auto; margin-right: auto; line-height: 1.6; }
+    .hero .tagline { font-size: 14px; text-transform: uppercase; letter-spacing: 2px; color: #C4B8AC; font-weight: 600; margin-bottom: 16px; }
+    .features { display: flex; gap: 24px; justify-content: center; flex-wrap: wrap; padding: 0 24px 60px; max-width: 900px; margin: 0 auto; }
+    .features .card { background: #fff; border-radius: 20px; padding: 32px; flex: 1; min-width: 240px; max-width: 280px; box-shadow: 0 4px 24px rgba(0,0,0,0.04); border: 1px solid #F0E8E0; }
+    .features .card .icon { font-size: 32px; margin-bottom: 12px; }
+    .features .card h3 { font-size: 18px; font-weight: 700; margin-bottom: 8px; }
+    .features .card p { font-size: 14px; color: #8B7E6E; line-height: 1.5; }
+    .legal-links { text-align: center; padding: 40px 24px; border-top: 1px solid #F0E8E0; }
+    .legal-links a { color: #F59E0B; text-decoration: none; font-weight: 600; margin: 0 16px; font-size: 14px; }
+    .legal-links a:hover { text-decoration: underline; }
+    .footer { text-align: center; padding: 24px; color: #C4B8AC; font-size: 13px; }
+    @media (max-width: 640px) {
+      .hero h1 { font-size: 32px; }
+      .features .card { min-width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <div class="hero">
+    <p class="tagline">Dine Together · Meet Over Meals</p>
+    <h1>Meet<span>Over</span>Meal</h1>
+    <p>A social dining app that connects people through shared meals at local restaurants. Find a table, match with someone new, and enjoy great food together.</p>
+  </div>
+
+  <div class="features">
+    <div class="card">
+      <div class="icon">🍽️</div>
+      <h3>Find a Table</h3>
+      <p>Browse nearby restaurants and discover active meetups at places you love.</p>
+    </div>
+    <div class="card">
+      <div class="icon">🤝</div>
+      <h3>Match & Meet</h3>
+      <p>Apply to join a meetup or host your own. A $5 deposit ensures everyone shows up.</p>
+    </div>
+    <div class="card">
+      <div class="icon">💬</div>
+      <h3>Chat & Connect</h3>
+      <p>Break the ice before you meet. Share photos, voice messages, and make new friends.</p>
+    </div>
+  </div>
+
+  <div class="legal-links">
+    <a href="/privacy">Privacy Policy</a>
+    <a href="/terms">Terms of Service</a>
+    <a href="mailto:feedback@meetovermeal.org">Contact Us</a>
+  </div>
+
+  <div class="footer">
+    &copy; 2026 MeetOverMeal. All rights reserved.
+  </div>
+</body>
+</html>

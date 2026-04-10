@@ -19,63 +19,276 @@
   </style>
 </head>
 <body>
-  <div class="container">
-    <a href="/" class="back">← Back to Home</a>
-    <h1>Privacy Policy</h1>
-    <p class="updated">Last updated: April 4, 2026</p>
+  <div class="container" id="content"></div>
 
-    <h2>1. Information We Collect</h2>
-    <p>When you use MeetOverMeal, we collect the following types of information:</p>
-    <ul>
-      <li><strong>Account Information:</strong> Email address, phone number, name, age, gender, city, and profile photos you provide during registration.</li>
-      <li><strong>Location Data:</strong> Your approximate location to show nearby restaurants and verify check-in at meetups. Location is only accessed when you use the app.</li>
-      <li><strong>Usage Data:</strong> Information about how you interact with the app, including meetups created, applications submitted, and chat messages.</li>
-      <li><strong>Payment Data:</strong> Payment information is processed securely through Stripe. We do not store your full card details on our servers.</li>
-      <li><strong>Device Information:</strong> Device type, operating system, and push notification tokens for delivering notifications.</li>
-    </ul>
+  <script>
+    const translations = {
+      en: {
+        back: '← Back to Home',
+        title: 'Privacy Policy',
+        updated: 'Last updated: April 4, 2026',
+        sections: [
+          { heading: '1. Information We Collect', content: '<p>When you use MeetOverMeal, we collect the following types of information:</p><ul><li><strong>Account Information:</strong> Email address, phone number, name, age, gender, city, and profile photos you provide during registration.</li><li><strong>Location Data:</strong> Your approximate location to show nearby restaurants and verify check-in at meetups. Location is only accessed when you use the app.</li><li><strong>Usage Data:</strong> Information about how you interact with the app, including meetups created, applications submitted, and chat messages.</li><li><strong>Payment Data:</strong> Payment information is processed securely through Stripe. We do not store your full card details on our servers.</li><li><strong>Device Information:</strong> Device type, operating system, and push notification tokens for delivering notifications.</li></ul>' },
+          { heading: '2. How We Use Your Information', content: '<ul><li>To create and manage your account</li><li>To match you with nearby meetups and dining partners</li><li>To process deposits, refunds, and penalties through our payment provider</li><li>To send push notifications about meetup updates, chat messages, and application status</li><li>To verify your location for restaurant check-ins</li><li>To enforce community guidelines and prevent abuse</li><li>To improve the app experience and fix bugs</li></ul>' },
+          { heading: '3. Information Sharing', content: '<p>We do not sell your personal information. We may share limited data with:</p><ul><li><strong>Other Users:</strong> Your public profile (nickname, age, gender, city, bio, photos) is visible to other users during the meetup matching process.</li><li><strong>Service Providers:</strong> Stripe (payments), Supabase (database), and Sentry (crash reporting) to operate the service.</li><li><strong>Legal Requirements:</strong> When required by law or to protect safety.</li></ul>' },
+          { heading: '4. Data Retention', content: '<p>We retain your account data as long as your account is active. You can request deletion of your account and all associated data at any time through the app\'s Profile settings. Upon deletion, your data is permanently removed within 30 days.</p>' },
+          { heading: '5. Data Security', content: '<p>We use industry-standard encryption (TLS/SSL) for all data in transit. Payment data is handled exclusively by Stripe, a PCI-compliant payment processor. Access to user data is restricted to authorized personnel only.</p>' },
+          { heading: '6. Your Rights', content: '<p>You have the right to:</p><ul><li>Access your personal data through your profile</li><li>Correct inaccurate information by editing your profile</li><li>Delete your account and all associated data</li><li>Opt out of push notifications through device settings</li></ul>' },
+          { heading: '7. Children\'s Privacy', content: '<p>MeetOverMeal is not intended for users under 18 years of age. We do not knowingly collect personal information from children.</p>' },
+          { heading: '8. Changes to This Policy', content: '<p>We may update this Privacy Policy from time to time. We will notify you of significant changes through the app or by email.</p>' },
+          { heading: '9. Contact Us', content: '<p>If you have questions about this Privacy Policy, contact us at <a href="mailto:feedback@meetovermeal.org">feedback@meetovermeal.org</a>.</p>' },
+        ],
+      },
+      zh: {
+        back: '← 返回首页',
+        title: '隐私政策',
+        updated: '最后更新：2026年4月4日',
+        sections: [
+          { heading: '1. 我们收集的信息', content: '<p>当您使用 MeetOverMeal 时，我们收集以下类型的信息：</p><ul><li><strong>帐户信息：</strong>您在注册时提供的电子邮件地址、电话号码、姓名、年龄、性别、城市和个人资料照片。</li><li><strong>位置数据：</strong>您的大致位置，用于显示附近的餐厅并验证约饭签到。仅在您使用应用时访问位置。</li><li><strong>使用数据：</strong>您与应用互动的信息，包括创建的约饭、提交的申请和聊天消息。</li><li><strong>支付数据：</strong>支付信息通过 Stripe 安全处理。我们不在服务器上存储您的完整银行卡信息。</li><li><strong>设备信息：</strong>设备类型、操作系统和推送通知令牌，用于发送通知。</li></ul>' },
+          { heading: '2. 我们如何使用您的信息', content: '<ul><li>创建和管理您的帐户</li><li>为您匹配附近的约饭和餐友</li><li>通过支付服务商处理押金、退款和罚金</li><li>发送关于约饭更新、聊天消息和申请状态的推送通知</li><li>验证您的位置以完成餐厅签到</li><li>执行社区准则并防止滥用</li><li>改善应用体验并修复错误</li></ul>' },
+          { heading: '3. 信息共享', content: '<p>我们不会出售您的个人信息。我们可能与以下方共享有限数据：</p><ul><li><strong>其他用户：</strong>您的公开资料（昵称、年龄、性别、城市、简介、照片）在约饭匹配过程中对其他用户可见。</li><li><strong>服务提供商：</strong>Stripe（支付）、Supabase（数据库）和 Sentry（崩溃报告）用于运营服务。</li><li><strong>法律要求：</strong>法律要求或为保护安全时。</li></ul>' },
+          { heading: '4. 数据保留', content: '<p>只要您的帐户处于活跃状态，我们就会保留您的帐户数据。您可以随时通过应用的个人资料设置请求删除帐户及所有相关数据。删除后，您的数据将在 30 天内永久移除。</p>' },
+          { heading: '5. 数据安全', content: '<p>我们对所有传输中的数据使用行业标准加密（TLS/SSL）。支付数据完全由符合 PCI 标准的支付处理商 Stripe 处理。用户数据的访问仅限于授权人员。</p>' },
+          { heading: '6. 您的权利', content: '<p>您有权：</p><ul><li>通过个人资料访问您的个人数据</li><li>通过编辑个人资料更正不准确的信息</li><li>删除您的帐户及所有相关数据</li><li>通过设备设置选择退出推送通知</li></ul>' },
+          { heading: '7. 儿童隐私', content: '<p>MeetOverMeal 不面向 18 岁以下的用户。我们不会故意收集儿童的个人信息。</p>' },
+          { heading: '8. 政策变更', content: '<p>我们可能会不时更新本隐私政策。我们将通过应用或电子邮件通知您重大变更。</p>' },
+          { heading: '9. 联系我们', content: '<p>如对本隐私政策有任何疑问，请联系 <a href="mailto:feedback@meetovermeal.org">feedback@meetovermeal.org</a>。</p>' },
+        ],
+      },
+      ja: {
+        back: '← ホームに戻る',
+        title: 'プライバシーポリシー',
+        updated: '最終更新日：2026年4月4日',
+        sections: [
+          { heading: '1. 収集する情報', content: '<p>MeetOverMealのご利用にあたり、以下の種類の情報を収集します：</p><ul><li><strong>アカウント情報：</strong>登録時に提供されるメールアドレス、電話番号、氏名、年齢、性別、都市、プロフィール写真。</li><li><strong>位置情報：</strong>近くのレストランの表示と食事会でのチェックイン確認のための概略位置情報。位置情報はアプリ使用時のみアクセスされます。</li><li><strong>利用データ：</strong>作成した食事会、提出した申請、チャットメッセージなど、アプリとのインタラクション情報。</li><li><strong>決済データ：</strong>決済情報はStripeを通じて安全に処理されます。カード情報の完全な詳細はサーバーに保存しません。</li><li><strong>デバイス情報：</strong>通知配信のためのデバイスタイプ、オペレーティングシステム、プッシュ通知トークン。</li></ul>' },
+          { heading: '2. 情報の利用方法', content: '<ul><li>アカウントの作成と管理</li><li>近くの食事会やダイニングパートナーとのマッチング</li><li>決済プロバイダーを通じたデポジット、返金、ペナルティの処理</li><li>食事会の更新、チャットメッセージ、申請ステータスに関するプッシュ通知の送信</li><li>レストランチェックインのための位置確認</li><li>コミュニティガイドラインの実施と不正利用の防止</li><li>アプリ体験の改善とバグ修正</li></ul>' },
+          { heading: '3. 情報の共有', content: '<p>個人情報を販売することはありません。以下の相手と限定的なデータを共有する場合があります：</p><ul><li><strong>他のユーザー：</strong>食事会マッチングプロセス中、公開プロフィール（ニックネーム、年齢、性別、都市、自己紹介、写真）が他のユーザーに表示されます。</li><li><strong>サービスプロバイダー：</strong>Stripe（決済）、Supabase（データベース）、Sentry（クラッシュレポート）がサービス運営のために利用されます。</li><li><strong>法的要件：</strong>法律で要求される場合または安全を保護するため。</li></ul>' },
+          { heading: '4. データの保持', content: '<p>アカウントがアクティブな限り、アカウントデータを保持します。アプリのプロフィール設定を通じて、いつでもアカウントおよび関連データの削除を要求できます。削除後、データは30日以内に完全に削除されます。</p>' },
+          { heading: '5. データセキュリティ', content: '<p>転送中のすべてのデータに業界標準の暗号化（TLS/SSL）を使用しています。決済データはPCI準拠の決済プロセッサーであるStripeが専用で処理します。ユーザーデータへのアクセスは承認されたスタッフのみに制限されています。</p>' },
+          { heading: '6. あなたの権利', content: '<p>以下の権利があります：</p><ul><li>プロフィールを通じた個人データへのアクセス</li><li>プロフィール編集による不正確な情報の修正</li><li>アカウントおよびすべての関連データの削除</li><li>デバイス設定を通じたプッシュ通知のオプトアウト</li></ul>' },
+          { heading: '7. 子どものプライバシー', content: '<p>MeetOverMealは18歳未満のユーザーを対象としていません。子どもの個人情報を故意に収集することはありません。</p>' },
+          { heading: '8. ポリシーの変更', content: '<p>本プライバシーポリシーは随時更新される場合があります。重要な変更はアプリまたはメールでお知らせします。</p>' },
+          { heading: '9. お問い合わせ', content: '<p>このプライバシーポリシーについてご質問がある場合は、<a href="mailto:feedback@meetovermeal.org">feedback@meetovermeal.org</a> までお問い合わせください。</p>' },
+        ],
+      },
+      ko: {
+        back: '← 홈으로 돌아가기',
+        title: '개인정보 보호정책',
+        updated: '최종 업데이트: 2026년 4월 4일',
+        sections: [
+          { heading: '1. 수집하는 정보', content: '<p>MeetOverMeal을 사용할 때 다음 유형의 정보를 수집합니다:</p><ul><li><strong>계정 정보:</strong> 가입 시 제공하는 이메일 주소, 전화번호, 이름, 나이, 성별, 도시, 프로필 사진.</li><li><strong>위치 데이터:</strong> 근처 레스토랑을 표시하고 식사 모임 체크인을 확인하기 위한 대략적인 위치. 앱 사용 시에만 위치에 접근합니다.</li><li><strong>사용 데이터:</strong> 생성한 식사 모임, 제출한 신청, 채팅 메시지 등 앱과의 상호작용 정보.</li><li><strong>결제 데이터:</strong> 결제 정보는 Stripe를 통해 안전하게 처리됩니다. 서버에 전체 카드 정보를 저장하지 않습니다.</li><li><strong>기기 정보:</strong> 알림 전달을 위한 기기 유형, 운영 체제, 푸시 알림 토큰.</li></ul>' },
+          { heading: '2. 정보 사용 방법', content: '<ul><li>계정 생성 및 관리</li><li>근처 식사 모임 및 식사 파트너와 매칭</li><li>결제 제공업체를 통한 보증금, 환불, 페널티 처리</li><li>식사 모임 업데이트, 채팅 메시지, 신청 상태에 대한 푸시 알림 전송</li><li>레스토랑 체크인을 위한 위치 확인</li><li>커뮤니티 가이드라인 시행 및 남용 방지</li><li>앱 경험 개선 및 버그 수정</li></ul>' },
+          { heading: '3. 정보 공유', content: '<p>개인정보를 판매하지 않습니다. 다음과 제한적인 데이터를 공유할 수 있습니다:</p><ul><li><strong>다른 사용자:</strong> 식사 모임 매칭 과정에서 공개 프로필(닉네임, 나이, 성별, 도시, 소개, 사진)이 다른 사용자에게 표시됩니다.</li><li><strong>서비스 제공업체:</strong> Stripe(결제), Supabase(데이터베이스), Sentry(충돌 보고)가 서비스 운영에 사용됩니다.</li><li><strong>법적 요구사항:</strong> 법률에 의해 요구되거나 안전을 보호하기 위해.</li></ul>' },
+          { heading: '4. 데이터 보존', content: '<p>계정이 활성 상태인 동안 계정 데이터를 보존합니다. 앱의 프로필 설정을 통해 언제든지 계정 및 모든 관련 데이터의 삭제를 요청할 수 있습니다. 삭제 시 30일 이내에 데이터가 영구적으로 제거됩니다.</p>' },
+          { heading: '5. 데이터 보안', content: '<p>전송 중인 모든 데이터에 업계 표준 암호화(TLS/SSL)를 사용합니다. 결제 데이터는 PCI 준수 결제 처리업체인 Stripe가 독점적으로 처리합니다. 사용자 데이터에 대한 접근은 승인된 담당자로 제한됩니다.</p>' },
+          { heading: '6. 귀하의 권리', content: '<p>다음과 같은 권리가 있습니다:</p><ul><li>프로필을 통한 개인 데이터 접근</li><li>프로필 편집을 통한 부정확한 정보 수정</li><li>계정 및 모든 관련 데이터 삭제</li><li>기기 설정을 통한 푸시 알림 수신 거부</li></ul>' },
+          { heading: '7. 아동 개인정보 보호', content: '<p>MeetOverMeal은 18세 미만의 사용자를 대상으로 하지 않습니다. 아동의 개인정보를 의도적으로 수집하지 않습니다.</p>' },
+          { heading: '8. 정책 변경', content: '<p>본 개인정보 보호정책은 수시로 업데이트될 수 있습니다. 중요한 변경 사항은 앱 또는 이메일을 통해 알려드립니다.</p>' },
+          { heading: '9. 문의', content: '<p>이 개인정보 보호정책에 대한 질문이 있으시면 <a href="mailto:feedback@meetovermeal.org">feedback@meetovermeal.org</a>으로 문의하십시오.</p>' },
+        ],
+      },
+      es: {
+        back: '← Volver al inicio',
+        title: 'Política de Privacidad',
+        updated: 'Última actualización: 4 de abril de 2026',
+        sections: [
+          { heading: '1. Información que Recopilamos', content: '<p>Cuando usa MeetOverMeal, recopilamos los siguientes tipos de información:</p><ul><li><strong>Información de Cuenta:</strong> Correo electrónico, número de teléfono, nombre, edad, género, ciudad y fotos de perfil que proporciona durante el registro.</li><li><strong>Datos de Ubicación:</strong> Su ubicación aproximada para mostrar restaurantes cercanos y verificar el registro en encuentros. Solo se accede a la ubicación cuando usa la aplicación.</li><li><strong>Datos de Uso:</strong> Información sobre cómo interactúa con la aplicación, incluyendo encuentros creados, solicitudes enviadas y mensajes de chat.</li><li><strong>Datos de Pago:</strong> La información de pago se procesa de forma segura a través de Stripe. No almacenamos los datos completos de su tarjeta en nuestros servidores.</li><li><strong>Información del Dispositivo:</strong> Tipo de dispositivo, sistema operativo y tokens de notificaciones push para entregar notificaciones.</li></ul>' },
+          { heading: '2. Cómo Usamos su Información', content: '<ul><li>Para crear y gestionar su cuenta</li><li>Para emparejarlo con encuentros y compañeros de comida cercanos</li><li>Para procesar depósitos, reembolsos y penalizaciones a través de nuestro proveedor de pagos</li><li>Para enviar notificaciones push sobre actualizaciones de encuentros, mensajes de chat y estado de solicitudes</li><li>Para verificar su ubicación para registros en restaurantes</li><li>Para hacer cumplir las normas de la comunidad y prevenir abusos</li><li>Para mejorar la experiencia de la aplicación y corregir errores</li></ul>' },
+          { heading: '3. Compartición de Información', content: '<p>No vendemos su información personal. Podemos compartir datos limitados con:</p><ul><li><strong>Otros Usuarios:</strong> Su perfil público (apodo, edad, género, ciudad, bio, fotos) es visible para otros usuarios durante el proceso de emparejamiento.</li><li><strong>Proveedores de Servicios:</strong> Stripe (pagos), Supabase (base de datos) y Sentry (reportes de errores) para operar el servicio.</li><li><strong>Requisitos Legales:</strong> Cuando lo requiera la ley o para proteger la seguridad.</li></ul>' },
+          { heading: '4. Retención de Datos', content: '<p>Retenemos los datos de su cuenta mientras su cuenta esté activa. Puede solicitar la eliminación de su cuenta y todos los datos asociados en cualquier momento a través de la configuración del Perfil. Tras la eliminación, sus datos se eliminan permanentemente en un plazo de 30 días.</p>' },
+          { heading: '5. Seguridad de Datos', content: '<p>Utilizamos cifrado estándar de la industria (TLS/SSL) para todos los datos en tránsito. Los datos de pago son gestionados exclusivamente por Stripe, un procesador de pagos compatible con PCI. El acceso a los datos de usuario está restringido al personal autorizado.</p>' },
+          { heading: '6. Sus Derechos', content: '<p>Tiene derecho a:</p><ul><li>Acceder a sus datos personales a través de su perfil</li><li>Corregir información inexacta editando su perfil</li><li>Eliminar su cuenta y todos los datos asociados</li><li>Desactivar las notificaciones push a través de la configuración del dispositivo</li></ul>' },
+          { heading: '7. Privacidad de Menores', content: '<p>MeetOverMeal no está destinado a usuarios menores de 18 años. No recopilamos intencionalmente información personal de menores.</p>' },
+          { heading: '8. Cambios en esta Política', content: '<p>Podemos actualizar esta Política de Privacidad periódicamente. Le notificaremos sobre cambios significativos a través de la aplicación o por correo electrónico.</p>' },
+          { heading: '9. Contáctenos', content: '<p>Si tiene preguntas sobre esta Política de Privacidad, contáctenos en <a href="mailto:feedback@meetovermeal.org">feedback@meetovermeal.org</a>.</p>' },
+        ],
+      },
+      fr: {
+        back: '← Retour à l\'accueil',
+        title: 'Politique de Confidentialité',
+        updated: 'Dernière mise à jour : 4 avril 2026',
+        sections: [
+          { heading: '1. Informations Collectées', content: '<p>Lorsque vous utilisez MeetOverMeal, nous collectons les types d\'informations suivants :</p><ul><li><strong>Informations de Compte :</strong> Adresse e-mail, numéro de téléphone, nom, âge, genre, ville et photos que vous fournissez lors de l\'inscription.</li><li><strong>Données de Localisation :</strong> Votre position approximative pour afficher les restaurants à proximité et vérifier l\'enregistrement. La localisation n\'est consultée que lorsque vous utilisez l\'application.</li><li><strong>Données d\'Utilisation :</strong> Comment vous interagissez avec l\'application, repas créés, candidatures soumises et messages.</li><li><strong>Données de Paiement :</strong> Les informations de paiement sont traitées en toute sécurité par Stripe. Nous ne stockons pas vos données bancaires complètes.</li><li><strong>Informations sur l\'Appareil :</strong> Type d\'appareil, système d\'exploitation et jetons de notifications push.</li></ul>' },
+          { heading: '2. Utilisation de vos Informations', content: '<ul><li>Pour créer et gérer votre compte</li><li>Pour vous associer à des repas et partenaires à proximité</li><li>Pour traiter les cautions, remboursements et pénalités via notre prestataire de paiement</li><li>Pour envoyer des notifications push sur les mises à jour, messages et statuts</li><li>Pour vérifier votre position lors des enregistrements au restaurant</li><li>Pour appliquer les règles de la communauté et prévenir les abus</li><li>Pour améliorer l\'expérience et corriger les bugs</li></ul>' },
+          { heading: '3. Partage d\'Informations', content: '<p>Nous ne vendons pas vos informations personnelles. Nous pouvons partager des données limitées avec :</p><ul><li><strong>Autres Utilisateurs :</strong> Votre profil public est visible pendant le processus de mise en relation.</li><li><strong>Prestataires de Services :</strong> Stripe (paiements), Supabase (base de données) et Sentry (rapports de crash).</li><li><strong>Exigences Légales :</strong> Lorsque requis par la loi ou pour protéger la sécurité.</li></ul>' },
+          { heading: '4. Conservation des Données', content: '<p>Nous conservons vos données tant que votre compte est actif. Vous pouvez demander la suppression à tout moment via les paramètres du Profil. Après suppression, vos données sont définitivement effacées sous 30 jours.</p>' },
+          { heading: '5. Sécurité des Données', content: '<p>Nous utilisons un chiffrement standard (TLS/SSL) pour toutes les données en transit. Les données de paiement sont gérées exclusivement par Stripe, conforme PCI. L\'accès aux données est restreint au personnel autorisé.</p>' },
+          { heading: '6. Vos Droits', content: '<p>Vous avez le droit de :</p><ul><li>Accéder à vos données personnelles via votre profil</li><li>Corriger les informations inexactes en modifiant votre profil</li><li>Supprimer votre compte et toutes les données associées</li><li>Désactiver les notifications push via les paramètres de l\'appareil</li></ul>' },
+          { heading: '7. Vie Privée des Enfants', content: '<p>MeetOverMeal n\'est pas destiné aux utilisateurs de moins de 18 ans. Nous ne collectons pas sciemment d\'informations personnelles auprès des enfants.</p>' },
+          { heading: '8. Modifications de cette Politique', content: '<p>Nous pouvons mettre à jour cette Politique périodiquement. Nous vous informerons des changements importants via l\'application ou par e-mail.</p>' },
+          { heading: '9. Nous Contacter', content: '<p>Pour toute question, contactez-nous à <a href="mailto:feedback@meetovermeal.org">feedback@meetovermeal.org</a>.</p>' },
+        ],
+      },
+      de: {
+        back: '← Zurück zur Startseite',
+        title: 'Datenschutzrichtlinie',
+        updated: 'Letzte Aktualisierung: 4. April 2026',
+        sections: [
+          { heading: '1. Erfasste Informationen', content: '<p>Bei der Nutzung von MeetOverMeal erfassen wir folgende Informationen:</p><ul><li><strong>Kontoinformationen:</strong> E-Mail, Telefonnummer, Name, Alter, Geschlecht, Stadt und Profilfotos bei der Registrierung.</li><li><strong>Standortdaten:</strong> Ihr ungefährer Standort für nahegelegene Restaurants und Check-in-Verifizierung. Nur während der App-Nutzung.</li><li><strong>Nutzungsdaten:</strong> Interaktionen mit der App, erstellte Treffen, eingereichte Bewerbungen und Chat-Nachrichten.</li><li><strong>Zahlungsdaten:</strong> Werden sicher über Stripe verarbeitet. Vollständige Kartendaten werden nicht gespeichert.</li><li><strong>Geräteinformationen:</strong> Gerätetyp, Betriebssystem und Push-Benachrichtigungstoken.</li></ul>' },
+          { heading: '2. Verwendung Ihrer Informationen', content: '<ul><li>Erstellung und Verwaltung Ihres Kontos</li><li>Zuordnung zu nahegelegenen Treffen und Essenspartnern</li><li>Verarbeitung von Kautionen, Erstattungen und Strafen</li><li>Push-Benachrichtigungen zu Updates, Nachrichten und Bewerbungsstatus</li><li>Standortverifizierung für Restaurant-Check-ins</li><li>Durchsetzung der Community-Richtlinien</li><li>Verbesserung der App und Fehlerbehebung</li></ul>' },
+          { heading: '3. Informationsweitergabe', content: '<p>Wir verkaufen keine personenbezogenen Daten. Wir teilen begrenzte Daten mit:</p><ul><li><strong>Andere Nutzer:</strong> Ihr öffentliches Profil ist beim Matching sichtbar.</li><li><strong>Dienstleister:</strong> Stripe (Zahlungen), Supabase (Datenbank), Sentry (Crash-Reports).</li><li><strong>Gesetzliche Anforderungen:</strong> Wenn gesetzlich erforderlich oder zum Schutz der Sicherheit.</li></ul>' },
+          { heading: '4. Datenspeicherung', content: '<p>Wir speichern Ihre Daten solange Ihr Konto aktiv ist. Löschung kann jederzeit über die Profileinstellungen angefordert werden. Nach Löschung werden Daten innerhalb von 30 Tagen dauerhaft entfernt.</p>' },
+          { heading: '5. Datensicherheit', content: '<p>Wir verwenden branchenübliche Verschlüsselung (TLS/SSL). Zahlungsdaten werden ausschließlich von Stripe verarbeitet. Zugang zu Nutzerdaten ist auf autorisiertes Personal beschränkt.</p>' },
+          { heading: '6. Ihre Rechte', content: '<p>Sie haben das Recht:</p><ul><li>Über Ihr Profil auf persönliche Daten zuzugreifen</li><li>Ungenaue Informationen durch Profilbearbeitung zu korrigieren</li><li>Ihr Konto und alle zugehörigen Daten zu löschen</li><li>Push-Benachrichtigungen über Geräteeinstellungen zu deaktivieren</li></ul>' },
+          { heading: '7. Datenschutz für Kinder', content: '<p>MeetOverMeal ist nicht für Nutzer unter 18 Jahren bestimmt. Wir sammeln nicht wissentlich Daten von Kindern.</p>' },
+          { heading: '8. Änderungen dieser Richtlinie', content: '<p>Wir können diese Richtlinie gelegentlich aktualisieren. Über wesentliche Änderungen informieren wir Sie per App oder E-Mail.</p>' },
+          { heading: '9. Kontakt', content: '<p>Bei Fragen kontaktieren Sie uns unter <a href="mailto:feedback@meetovermeal.org">feedback@meetovermeal.org</a>.</p>' },
+        ],
+      },
+      pt: {
+        back: '← Voltar ao início',
+        title: 'Política de Privacidade',
+        updated: 'Última atualização: 4 de abril de 2026',
+        sections: [
+          { heading: '1. Informações que Coletamos', content: '<p>Ao usar o MeetOverMeal, coletamos os seguintes tipos de informações:</p><ul><li><strong>Informações da Conta:</strong> E-mail, telefone, nome, idade, gênero, cidade e fotos fornecidos no cadastro.</li><li><strong>Dados de Localização:</strong> Sua localização aproximada para mostrar restaurantes próximos e verificar check-in. Acessada apenas durante o uso do app.</li><li><strong>Dados de Uso:</strong> Interações com o app, encontros criados, candidaturas e mensagens.</li><li><strong>Dados de Pagamento:</strong> Processados de forma segura pelo Stripe. Não armazenamos dados completos do cartão.</li><li><strong>Informações do Dispositivo:</strong> Tipo de dispositivo, sistema operacional e tokens de notificação push.</li></ul>' },
+          { heading: '2. Como Usamos suas Informações', content: '<ul><li>Para criar e gerenciar sua conta</li><li>Para conectá-lo a encontros e parceiros de refeição próximos</li><li>Para processar depósitos, reembolsos e penalidades</li><li>Para enviar notificações push sobre atualizações, mensagens e status</li><li>Para verificar sua localização para check-ins</li><li>Para aplicar diretrizes da comunidade e prevenir abusos</li><li>Para melhorar a experiência e corrigir bugs</li></ul>' },
+          { heading: '3. Compartilhamento de Informações', content: '<p>Não vendemos suas informações pessoais. Podemos compartilhar dados limitados com:</p><ul><li><strong>Outros Usuários:</strong> Seu perfil público é visível durante o processo de match.</li><li><strong>Provedores de Serviço:</strong> Stripe (pagamentos), Supabase (banco de dados), Sentry (relatórios de erro).</li><li><strong>Requisitos Legais:</strong> Quando exigido por lei ou para proteção.</li></ul>' },
+          { heading: '4. Retenção de Dados', content: '<p>Mantemos seus dados enquanto a conta estiver ativa. A exclusão pode ser solicitada a qualquer momento nas configurações do Perfil. Após exclusão, os dados são removidos permanentemente em 30 dias.</p>' },
+          { heading: '5. Segurança dos Dados', content: '<p>Usamos criptografia padrão (TLS/SSL) para todos os dados em trânsito. Dados de pagamento são tratados exclusivamente pelo Stripe. O acesso é restrito ao pessoal autorizado.</p>' },
+          { heading: '6. Seus Direitos', content: '<p>Você tem direito a:</p><ul><li>Acessar seus dados pessoais pelo perfil</li><li>Corrigir informações imprecisas editando o perfil</li><li>Excluir sua conta e todos os dados associados</li><li>Desativar notificações push nas configurações do dispositivo</li></ul>' },
+          { heading: '7. Privacidade de Crianças', content: '<p>O MeetOverMeal não é destinado a menores de 18 anos. Não coletamos intencionalmente informações de crianças.</p>' },
+          { heading: '8. Alterações nesta Política', content: '<p>Podemos atualizar esta Política periodicamente. Notificaremos sobre mudanças significativas pelo app ou e-mail.</p>' },
+          { heading: '9. Contato', content: '<p>Dúvidas sobre esta Política? Contate-nos em <a href="mailto:feedback@meetovermeal.org">feedback@meetovermeal.org</a>.</p>' },
+        ],
+      },
+      ru: {
+        back: '← Вернуться на главную',
+        title: 'Политика Конфиденциальности',
+        updated: 'Последнее обновление: 4 апреля 2026 г.',
+        sections: [
+          { heading: '1. Собираемая информация', content: '<p>При использовании MeetOverMeal мы собираем следующие типы информации:</p><ul><li><strong>Информация аккаунта:</strong> Email, телефон, имя, возраст, пол, город и фотографии профиля при регистрации.</li><li><strong>Данные о местоположении:</strong> Приблизительное местоположение для показа ближайших ресторанов и подтверждения прибытия. Доступ только при использовании приложения.</li><li><strong>Данные об использовании:</strong> Созданные встречи, заявки и сообщения в чате.</li><li><strong>Платёжные данные:</strong> Обрабатываются безопасно через Stripe. Полные данные карты не хранятся.</li><li><strong>Информация об устройстве:</strong> Тип устройства, ОС и токены push-уведомлений.</li></ul>' },
+          { heading: '2. Использование информации', content: '<ul><li>Создание и управление аккаунтом</li><li>Подбор ближайших встреч и партнёров</li><li>Обработка залогов, возвратов и штрафов</li><li>Push-уведомления об обновлениях, сообщениях и статусах</li><li>Проверка местоположения для check-in</li><li>Соблюдение правил сообщества</li><li>Улучшение приложения и исправление ошибок</li></ul>' },
+          { heading: '3. Передача информации', content: '<p>Мы не продаём вашу информацию. Мы можем делиться ограниченными данными с:</p><ul><li><strong>Другие пользователи:</strong> Ваш публичный профиль виден при подборе.</li><li><strong>Поставщики услуг:</strong> Stripe (платежи), Supabase (база данных), Sentry (отчёты о сбоях).</li><li><strong>Законные требования:</strong> По требованию закона или для защиты безопасности.</li></ul>' },
+          { heading: '4. Хранение данных', content: '<p>Данные хранятся пока аккаунт активен. Удаление можно запросить через настройки профиля. После удаления данные безвозвратно удаляются в течение 30 дней.</p>' },
+          { heading: '5. Безопасность данных', content: '<p>Используется стандартное шифрование (TLS/SSL). Платёжные данные обрабатываются только Stripe (PCI-совместимый). Доступ к данным ограничен авторизованным персоналом.</p>' },
+          { heading: '6. Ваши права', content: '<p>Вы имеете право:</p><ul><li>Получить доступ к персональным данным через профиль</li><li>Исправить неточную информацию</li><li>Удалить аккаунт и все данные</li><li>Отключить push-уведомления в настройках устройства</li></ul>' },
+          { heading: '7. Конфиденциальность детей', content: '<p>MeetOverMeal не предназначен для пользователей младше 18 лет. Мы не собираем информацию о детях намеренно.</p>' },
+          { heading: '8. Изменения политики', content: '<p>Мы можем обновлять эту Политику. О существенных изменениях уведомим через приложение или email.</p>' },
+          { heading: '9. Контакты', content: '<p>Вопросы? Пишите на <a href="mailto:feedback@meetovermeal.org">feedback@meetovermeal.org</a>.</p>' },
+        ],
+      },
+      ar: {
+        back: '← العودة للرئيسية',
+        title: 'سياسة الخصوصية',
+        updated: 'آخر تحديث: 4 أبريل 2026',
+        sections: [
+          { heading: '1. المعلومات التي نجمعها', content: '<p>عند استخدامك لـ MeetOverMeal، نجمع الأنواع التالية من المعلومات:</p><ul><li><strong>معلومات الحساب:</strong> البريد الإلكتروني والهاتف والاسم والعمر والجنس والمدينة والصور.</li><li><strong>بيانات الموقع:</strong> موقعك التقريبي لعرض المطاعم القريبة والتحقق من تسجيل الحضور. يتم الوصول فقط عند استخدام التطبيق.</li><li><strong>بيانات الاستخدام:</strong> اللقاءات والطلبات والرسائل.</li><li><strong>بيانات الدفع:</strong> تتم معالجتها بأمان عبر Stripe. لا نخزن بيانات البطاقة الكاملة.</li><li><strong>معلومات الجهاز:</strong> نوع الجهاز ونظام التشغيل ورموز الإشعارات.</li></ul>' },
+          { heading: '2. كيف نستخدم معلوماتك', content: '<ul><li>لإنشاء وإدارة حسابك</li><li>لربطك بلقاءات وشركاء طعام قريبين</li><li>لمعالجة التأمينات والمبالغ المستردة والغرامات</li><li>لإرسال إشعارات حول التحديثات والرسائل والحالات</li><li>للتحقق من موقعك لتسجيل الحضور</li><li>لتطبيق إرشادات المجتمع ومنع الإساءة</li><li>لتحسين التطبيق وإصلاح الأخطاء</li></ul>' },
+          { heading: '3. مشاركة المعلومات', content: '<p>نحن لا نبيع معلوماتك. قد نشارك بيانات محدودة مع:</p><ul><li><strong>مستخدمون آخرون:</strong> ملفك الشخصي العام مرئي أثناء عملية المطابقة.</li><li><strong>مقدمو الخدمات:</strong> Stripe وSupabase وSentry.</li><li><strong>المتطلبات القانونية:</strong> عند الحاجة قانونيًا أو لحماية السلامة.</li></ul>' },
+          { heading: '4. الاحتفاظ بالبيانات', content: '<p>نحتفظ ببياناتك طالما حسابك نشط. يمكنك طلب الحذف عبر إعدادات الملف الشخصي. تُحذف البيانات نهائيًا خلال 30 يومًا.</p>' },
+          { heading: '5. أمن البيانات', content: '<p>نستخدم تشفير TLS/SSL. بيانات الدفع تُعالج حصريًا بواسطة Stripe. الوصول مقيد بالموظفين المصرح لهم فقط.</p>' },
+          { heading: '6. حقوقك', content: '<p>لديك الحق في:</p><ul><li>الوصول إلى بياناتك الشخصية</li><li>تصحيح المعلومات غير الدقيقة</li><li>حذف حسابك وجميع البيانات</li><li>إلغاء الإشعارات من إعدادات الجهاز</li></ul>' },
+          { heading: '7. خصوصية الأطفال', content: '<p>MeetOverMeal غير مخصص للمستخدمين دون 18 عامًا. نحن لا نجمع معلومات الأطفال عمدًا.</p>' },
+          { heading: '8. تعديلات السياسة', content: '<p>قد نحدث هذه السياسة. سنعلمك بالتغييرات المهمة عبر التطبيق أو البريد.</p>' },
+          { heading: '9. اتصل بنا', content: '<p>للاستفسارات: <a href="mailto:feedback@meetovermeal.org">feedback@meetovermeal.org</a>.</p>' },
+        ],
+      },
+      hi: {
+        back: '← होम पर वापस जाएं',
+        title: 'गोपनीयता नीति',
+        updated: 'अंतिम अपडेट: 4 अप्रैल 2026',
+        sections: [
+          { heading: '1. हम कौन सी जानकारी एकत्र करते हैं', content: '<p>MeetOverMeal का उपयोग करते समय, हम निम्नलिखित प्रकार की जानकारी एकत्र करते हैं:</p><ul><li><strong>खाता जानकारी:</strong> पंजीकरण के दौरान प्रदान किए गए ईमेल, फ़ोन, नाम, आयु, लिंग, शहर और फ़ोटो।</li><li><strong>स्थान डेटा:</strong> नजदीकी रेस्तरां और चेक-इन सत्यापन के लिए आपका अनुमानित स्थान। केवल ऐप उपयोग के दौरान।</li><li><strong>उपयोग डेटा:</strong> बनाई गई मीटअप, जमा आवेदन और चैट संदेश।</li><li><strong>भुगतान डेटा:</strong> Stripe के माध्यम से सुरक्षित रूप से संसाधित। पूर्ण कार्ड विवरण संग्रहीत नहीं किए जाते।</li><li><strong>डिवाइस जानकारी:</strong> डिवाइस प्रकार, OS और पुश नोटिफ़िकेशन टोकन।</li></ul>' },
+          { heading: '2. हम आपकी जानकारी का उपयोग कैसे करते हैं', content: '<ul><li>आपका खाता बनाने और प्रबंधित करने के लिए</li><li>नजदीकी मीटअप और भोजन साथी से मिलाने के लिए</li><li>जमा राशि, रिफंड और जुर्माना संसाधित करने के लिए</li><li>अपडेट, संदेश और स्थिति के बारे में पुश नोटिफ़िकेशन भेजने के लिए</li><li>चेक-इन के लिए स्थान सत्यापित करने के लिए</li><li>सामुदायिक दिशानिर्देश लागू करने और दुरुपयोग रोकने के लिए</li><li>ऐप अनुभव सुधारने और बग ठीक करने के लिए</li></ul>' },
+          { heading: '3. जानकारी साझा करना', content: '<p>हम आपकी व्यक्तिगत जानकारी नहीं बेचते। हम सीमित डेटा साझा कर सकते हैं:</p><ul><li><strong>अन्य उपयोगकर्ता:</strong> आपकी सार्वजनिक प्रोफ़ाइल मैचिंग के दौरान दिखाई देती है।</li><li><strong>सेवा प्रदाता:</strong> Stripe, Supabase, Sentry।</li><li><strong>कानूनी आवश्यकताएं:</strong> कानून द्वारा आवश्यक होने पर या सुरक्षा के लिए।</li></ul>' },
+          { heading: '4. डेटा प्रतिधारण', content: '<p>हम आपका डेटा तब तक रखते हैं जब तक आपका खाता सक्रिय है। प्रोफ़ाइल सेटिंग्स से कभी भी हटाने का अनुरोध कर सकते हैं। हटाने के बाद 30 दिनों में डेटा स्थायी रूप से हटा दिया जाता है।</p>' },
+          { heading: '5. डेटा सुरक्षा', content: '<p>हम TLS/SSL एन्क्रिप्शन का उपयोग करते हैं। भुगतान डेटा Stripe द्वारा संसाधित होता है। डेटा तक पहुंच अधिकृत कर्मचारियों तक सीमित है।</p>' },
+          { heading: '6. आपके अधिकार', content: '<p>आपको अधिकार है:</p><ul><li>प्रोफ़ाइल के माध्यम से व्यक्तिगत डेटा तक पहुंचना</li><li>प्रोफ़ाइल संपादन द्वारा गलत जानकारी सुधारना</li><li>खाता और डेटा हटाना</li><li>डिवाइस सेटिंग्स से पुश नोटिफ़िकेशन बंद करना</li></ul>' },
+          { heading: '7. बच्चों की गोपनीयता', content: '<p>MeetOverMeal 18 वर्ष से कम उम्र के उपयोगकर्ताओं के लिए नहीं है। हम जानबूझकर बच्चों की जानकारी एकत्र नहीं करते।</p>' },
+          { heading: '8. नीति में परिवर्तन', content: '<p>हम इस नीति को समय-समय पर अपडेट कर सकते हैं। महत्वपूर्ण परिवर्तनों की सूचना ऐप या ईमेल से दी जाएगी।</p>' },
+          { heading: '9. संपर्क करें', content: '<p>प्रश्नों के लिए <a href="mailto:feedback@meetovermeal.org">feedback@meetovermeal.org</a> पर संपर्क करें।</p>' },
+        ],
+      },
+      th: {
+        back: '← กลับหน้าหลัก',
+        title: 'นโยบายความเป็นส่วนตัว',
+        updated: 'อัปเดตล่าสุด: 4 เมษายน 2026',
+        sections: [
+          { heading: '1. ข้อมูลที่เราเก็บรวบรวม', content: '<p>เมื่อคุณใช้ MeetOverMeal เราเก็บรวบรวมข้อมูลดังนี้:</p><ul><li><strong>ข้อมูลบัญชี:</strong> อีเมล หมายเลขโทรศัพท์ ชื่อ อายุ เพศ เมือง และรูปโปรไฟล์</li><li><strong>ข้อมูลตำแหน่ง:</strong> ตำแหน่งโดยประมาณเพื่อแสดงร้านอาหารใกล้เคียงและยืนยันการเช็คอิน เข้าถึงเฉพาะตอนใช้แอปเท่านั้น</li><li><strong>ข้อมูลการใช้งาน:</strong> การสร้างนัดพบ การสมัคร และข้อความแชท</li><li><strong>ข้อมูลการชำระเงิน:</strong> ผ่าน Stripe อย่างปลอดภัย ไม่เก็บข้อมูลบัตรเต็ม</li><li><strong>ข้อมูลอุปกรณ์:</strong> ประเภทอุปกรณ์ ระบบปฏิบัติการ และโทเค็นแจ้งเตือน</li></ul>' },
+          { heading: '2. การใช้ข้อมูล', content: '<ul><li>สร้างและจัดการบัญชี</li><li>จับคู่กับนัดพบและเพื่อนร่วมมื้อ</li><li>ประมวลผลเงินมัดจำ การคืนเงิน และค่าปรับ</li><li>ส่งการแจ้งเตือนเกี่ยวกับอัปเดต ข้อความ และสถานะ</li><li>ตรวจสอบตำแหน่งสำหรับเช็คอิน</li><li>บังคับใช้กฎชุมชนและป้องกันการละเมิด</li><li>ปรับปรุงแอปและแก้ไขข้อผิดพลาด</li></ul>' },
+          { heading: '3. การแบ่งปันข้อมูล', content: '<p>เราไม่ขายข้อมูลส่วนบุคคล เราอาจแบ่งปันข้อมูลจำกัดกับ:</p><ul><li><strong>ผู้ใช้คนอื่น:</strong> โปรไฟล์สาธารณะจะแสดงระหว่างการจับคู่</li><li><strong>ผู้ให้บริการ:</strong> Stripe, Supabase, Sentry</li><li><strong>ข้อกำหนดทางกฎหมาย:</strong> เมื่อกฎหมายกำหนดหรือเพื่อความปลอดภัย</li></ul>' },
+          { heading: '4. การเก็บรักษาข้อมูล', content: '<p>เราเก็บข้อมูลตราบที่บัญชียังใช้งานอยู่ คุณสามารถขอลบได้ทุกเมื่อ ข้อมูลจะถูกลบถาวรภายใน 30 วัน</p>' },
+          { heading: '5. ความปลอดภัยข้อมูล', content: '<p>เราใช้การเข้ารหัส TLS/SSL ข้อมูลการชำระเงินจัดการโดย Stripe การเข้าถึงจำกัดเฉพาะบุคลากรที่ได้รับอนุญาต</p>' },
+          { heading: '6. สิทธิ์ของคุณ', content: '<p>คุณมีสิทธิ์:</p><ul><li>เข้าถึงข้อมูลส่วนบุคคลผ่านโปรไฟล์</li><li>แก้ไขข้อมูลที่ไม่ถูกต้อง</li><li>ลบบัญชีและข้อมูลทั้งหมด</li><li>ปิดการแจ้งเตือนจากการตั้งค่าอุปกรณ์</li></ul>' },
+          { heading: '7. ความเป็นส่วนตัวของเด็ก', content: '<p>MeetOverMeal ไม่ได้ออกแบบมาสำหรับผู้ใช้อายุต่ำกว่า 18 ปี เราไม่เก็บข้อมูลของเด็กโดยเจตนา</p>' },
+          { heading: '8. การเปลี่ยนแปลงนโยบาย', content: '<p>เราอาจอัปเดตนโยบายนี้เป็นครั้งคราว จะแจ้งการเปลี่ยนแปลงสำคัญผ่านแอปหรืออีเมล</p>' },
+          { heading: '9. ติดต่อเรา', content: '<p>สอบถามที่ <a href="mailto:feedback@meetovermeal.org">feedback@meetovermeal.org</a></p>' },
+        ],
+      },
+      vi: {
+        back: '← Quay lại trang chủ',
+        title: 'Chính sách Bảo mật',
+        updated: 'Cập nhật lần cuối: 4 tháng 4, 2026',
+        sections: [
+          { heading: '1. Thông tin Chúng tôi Thu thập', content: '<p>Khi sử dụng MeetOverMeal, chúng tôi thu thập các loại thông tin sau:</p><ul><li><strong>Thông tin Tài khoản:</strong> Email, số điện thoại, tên, tuổi, giới tính, thành phố và ảnh hồ sơ khi đăng ký.</li><li><strong>Dữ liệu Vị trí:</strong> Vị trí gần đúng để hiển thị nhà hàng gần đó và xác minh check-in. Chỉ truy cập khi sử dụng ứng dụng.</li><li><strong>Dữ liệu Sử dụng:</strong> Buổi gặp đã tạo, đơn đăng ký và tin nhắn chat.</li><li><strong>Dữ liệu Thanh toán:</strong> Được xử lý an toàn qua Stripe. Không lưu trữ thông tin thẻ đầy đủ.</li><li><strong>Thông tin Thiết bị:</strong> Loại thiết bị, hệ điều hành và token thông báo đẩy.</li></ul>' },
+          { heading: '2. Cách Sử dụng Thông tin', content: '<ul><li>Tạo và quản lý tài khoản</li><li>Ghép đôi với buổi gặp và bạn ăn gần đó</li><li>Xử lý tiền đặt cọc, hoàn tiền và phí phạt</li><li>Gửi thông báo đẩy về cập nhật, tin nhắn và trạng thái</li><li>Xác minh vị trí check-in</li><li>Thực thi quy tắc cộng đồng và ngăn chặn lạm dụng</li><li>Cải thiện ứng dụng và sửa lỗi</li></ul>' },
+          { heading: '3. Chia sẻ Thông tin', content: '<p>Chúng tôi không bán thông tin cá nhân. Chúng tôi có thể chia sẻ dữ liệu hạn chế với:</p><ul><li><strong>Người dùng khác:</strong> Hồ sơ công khai hiển thị trong quá trình ghép đôi.</li><li><strong>Nhà cung cấp Dịch vụ:</strong> Stripe, Supabase, Sentry.</li><li><strong>Yêu cầu Pháp lý:</strong> Khi luật pháp yêu cầu hoặc để bảo vệ an toàn.</li></ul>' },
+          { heading: '4. Lưu giữ Dữ liệu', content: '<p>Chúng tôi giữ dữ liệu khi tài khoản còn hoạt động. Có thể yêu cầu xóa qua Cài đặt Hồ sơ. Dữ liệu được xóa vĩnh viễn trong 30 ngày.</p>' },
+          { heading: '5. Bảo mật Dữ liệu', content: '<p>Sử dụng mã hóa TLS/SSL. Dữ liệu thanh toán do Stripe xử lý. Quyền truy cập chỉ dành cho nhân viên được ủy quyền.</p>' },
+          { heading: '6. Quyền của Bạn', content: '<p>Bạn có quyền:</p><ul><li>Truy cập dữ liệu cá nhân qua hồ sơ</li><li>Sửa thông tin không chính xác</li><li>Xóa tài khoản và tất cả dữ liệu</li><li>Tắt thông báo đẩy qua cài đặt thiết bị</li></ul>' },
+          { heading: '7. Quyền riêng tư Trẻ em', content: '<p>MeetOverMeal không dành cho người dùng dưới 18 tuổi. Chúng tôi không cố ý thu thập thông tin của trẻ em.</p>' },
+          { heading: '8. Thay đổi Chính sách', content: '<p>Chúng tôi có thể cập nhật Chính sách này. Sẽ thông báo qua ứng dụng hoặc email về các thay đổi quan trọng.</p>' },
+          { heading: '9. Liên hệ', content: '<p>Thắc mắc? Liên hệ <a href="mailto:feedback@meetovermeal.org">feedback@meetovermeal.org</a>.</p>' },
+        ],
+      },
+      id: {
+        back: '← Kembali ke Beranda',
+        title: 'Kebijakan Privasi',
+        updated: 'Terakhir diperbarui: 4 April 2026',
+        sections: [
+          { heading: '1. Informasi yang Kami Kumpulkan', content: '<p>Saat menggunakan MeetOverMeal, kami mengumpulkan informasi berikut:</p><ul><li><strong>Informasi Akun:</strong> Email, telepon, nama, usia, gender, kota, dan foto profil saat pendaftaran.</li><li><strong>Data Lokasi:</strong> Lokasi perkiraan untuk menampilkan restoran terdekat dan memverifikasi check-in. Hanya diakses saat menggunakan aplikasi.</li><li><strong>Data Penggunaan:</strong> Pertemuan yang dibuat, lamaran, dan pesan chat.</li><li><strong>Data Pembayaran:</strong> Diproses dengan aman melalui Stripe. Data kartu lengkap tidak disimpan.</li><li><strong>Informasi Perangkat:</strong> Jenis perangkat, OS, dan token notifikasi push.</li></ul>' },
+          { heading: '2. Cara Kami Menggunakan Informasi', content: '<ul><li>Membuat dan mengelola akun</li><li>Mencocokkan dengan pertemuan dan mitra makan terdekat</li><li>Memproses deposit, pengembalian, dan denda</li><li>Mengirim notifikasi push tentang pembaruan, pesan, dan status</li><li>Memverifikasi lokasi untuk check-in</li><li>Menegakkan pedoman komunitas dan mencegah penyalahgunaan</li><li>Meningkatkan pengalaman dan memperbaiki bug</li></ul>' },
+          { heading: '3. Berbagi Informasi', content: '<p>Kami tidak menjual informasi pribadi. Kami mungkin membagikan data terbatas dengan:</p><ul><li><strong>Pengguna Lain:</strong> Profil publik terlihat saat proses pencocokan.</li><li><strong>Penyedia Layanan:</strong> Stripe, Supabase, Sentry.</li><li><strong>Persyaratan Hukum:</strong> Saat diwajibkan hukum atau untuk keamanan.</li></ul>' },
+          { heading: '4. Penyimpanan Data', content: '<p>Kami menyimpan data selama akun aktif. Penghapusan dapat diminta kapan saja melalui pengaturan Profil. Data dihapus permanen dalam 30 hari.</p>' },
+          { heading: '5. Keamanan Data', content: '<p>Kami menggunakan enkripsi TLS/SSL. Data pembayaran ditangani Stripe. Akses dibatasi untuk personel yang berwenang.</p>' },
+          { heading: '6. Hak Anda', content: '<p>Anda berhak:</p><ul><li>Mengakses data pribadi melalui profil</li><li>Memperbaiki informasi yang tidak akurat</li><li>Menghapus akun dan semua data</li><li>Menonaktifkan notifikasi push melalui pengaturan perangkat</li></ul>' },
+          { heading: '7. Privasi Anak', content: '<p>MeetOverMeal tidak ditujukan untuk pengguna di bawah 18 tahun. Kami tidak sengaja mengumpulkan informasi anak-anak.</p>' },
+          { heading: '8. Perubahan Kebijakan', content: '<p>Kami mungkin memperbarui Kebijakan ini. Perubahan penting akan diberitahukan melalui aplikasi atau email.</p>' },
+          { heading: '9. Hubungi Kami', content: '<p>Pertanyaan? Hubungi <a href="mailto:feedback@meetovermeal.org">feedback@meetovermeal.org</a>.</p>' },
+        ],
+      },
+      it: {
+        back: '← Torna alla Home',
+        title: 'Privacy Policy',
+        updated: 'Ultimo aggiornamento: 4 aprile 2026',
+        sections: [
+          { heading: '1. Informazioni Raccolte', content: '<p>Quando utilizzi MeetOverMeal, raccogliamo le seguenti informazioni:</p><ul><li><strong>Informazioni Account:</strong> Email, telefono, nome, età, genere, città e foto profilo alla registrazione.</li><li><strong>Dati di Posizione:</strong> Posizione approssimativa per mostrare ristoranti vicini e verificare il check-in. Accesso solo durante l\'uso dell\'app.</li><li><strong>Dati di Utilizzo:</strong> Incontri creati, candidature e messaggi chat.</li><li><strong>Dati di Pagamento:</strong> Elaborati in sicurezza da Stripe. Non memorizziamo i dati completi della carta.</li><li><strong>Informazioni Dispositivo:</strong> Tipo dispositivo, OS e token notifiche push.</li></ul>' },
+          { heading: '2. Come Utilizziamo le Informazioni', content: '<ul><li>Per creare e gestire il tuo account</li><li>Per abbinarti a incontri e compagni di pasto vicini</li><li>Per elaborare depositi, rimborsi e penalità</li><li>Per inviare notifiche push su aggiornamenti, messaggi e stato</li><li>Per verificare la posizione per il check-in</li><li>Per applicare le linee guida della community</li><li>Per migliorare l\'app e correggere bug</li></ul>' },
+          { heading: '3. Condivisione Informazioni', content: '<p>Non vendiamo i tuoi dati personali. Possiamo condividere dati limitati con:</p><ul><li><strong>Altri Utenti:</strong> Il tuo profilo pubblico è visibile durante il matching.</li><li><strong>Provider di Servizi:</strong> Stripe, Supabase, Sentry.</li><li><strong>Requisiti Legali:</strong> Quando richiesto dalla legge o per sicurezza.</li></ul>' },
+          { heading: '4. Conservazione Dati', content: '<p>Conserviamo i dati finché l\'account è attivo. La cancellazione può essere richiesta tramite le impostazioni del Profilo. I dati vengono rimossi permanentemente entro 30 giorni.</p>' },
+          { heading: '5. Sicurezza Dati', content: '<p>Utilizziamo crittografia TLS/SSL. I dati di pagamento sono gestiti da Stripe. L\'accesso è limitato al personale autorizzato.</p>' },
+          { heading: '6. I Tuoi Diritti', content: '<p>Hai il diritto di:</p><ul><li>Accedere ai dati personali tramite il profilo</li><li>Correggere informazioni inesatte</li><li>Eliminare account e tutti i dati</li><li>Disattivare notifiche push dalle impostazioni del dispositivo</li></ul>' },
+          { heading: '7. Privacy dei Minori', content: '<p>MeetOverMeal non è destinato agli utenti sotto i 18 anni. Non raccogliamo intenzionalmente informazioni sui minori.</p>' },
+          { heading: '8. Modifiche alla Policy', content: '<p>Possiamo aggiornare questa Policy. Le modifiche significative saranno comunicate tramite app o email.</p>' },
+          { heading: '9. Contatti', content: '<p>Domande? Contattaci a <a href="mailto:feedback@meetovermeal.org">feedback@meetovermeal.org</a>.</p>' },
+        ],
+      },
+    };
 
-    <h2>2. How We Use Your Information</h2>
-    <ul>
-      <li>To create and manage your account</li>
-      <li>To match you with nearby meetups and dining partners</li>
-      <li>To process deposits, refunds, and penalties through our payment provider</li>
-      <li>To send push notifications about meetup updates, chat messages, and application status</li>
-      <li>To verify your location for restaurant check-ins</li>
-      <li>To enforce community guidelines and prevent abuse</li>
-      <li>To improve the app experience and fix bugs</li>
-    </ul>
+    function render() {
+      const params = new URLSearchParams(window.location.search);
+      const lang = params.get('lang') || navigator.language?.split('-')[0] || 'en';
+      const t = translations[lang] || translations.en;
 
-    <h2>3. Information Sharing</h2>
-    <p>We do not sell your personal information. We may share limited data with:</p>
-    <ul>
-      <li><strong>Other Users:</strong> Your public profile (nickname, age, gender, city, bio, photos) is visible to other users during the meetup matching process.</li>
-      <li><strong>Service Providers:</strong> Stripe (payments), Supabase (database), and Sentry (crash reporting) to operate the service.</li>
-      <li><strong>Legal Requirements:</strong> When required by law or to protect safety.</li>
-    </ul>
+      document.documentElement.lang = lang;
+      document.title = t.title + ' — MeetOverMeal';
 
-    <h2>4. Data Retention</h2>
-    <p>We retain your account data as long as your account is active. You can request deletion of your account and all associated data at any time through the app's Profile settings. Upon deletion, your data is permanently removed within 30 days.</p>
+      let html = `<a href="/" class="back">${t.back}</a>`;
+      html += `<h1>${t.title}</h1>`;
+      html += `<p class="updated">${t.updated}</p>`;
+      t.sections.forEach(s => {
+        html += `<h2>${s.heading}</h2>${s.content}`;
+      });
 
-    <h2>5. Data Security</h2>
-    <p>We use industry-standard encryption (TLS/SSL) for all data in transit. Payment data is handled exclusively by Stripe, a PCI-compliant payment processor. Access to user data is restricted to authorized personnel only.</p>
+      document.getElementById('content').innerHTML = html;
 
-    <h2>6. Your Rights</h2>
-    <p>You have the right to:</p>
-    <ul>
-      <li>Access your personal data through your profile</li>
-      <li>Correct inaccurate information by editing your profile</li>
-      <li>Delete your account and all associated data</li>
-      <li>Opt out of push notifications through device settings</li>
-    </ul>
+      // RTL support for Arabic
+      if (lang === 'ar') {
+        document.documentElement.dir = 'rtl';
+      }
+    }
 
-    <h2>7. Children's Privacy</h2>
-    <p>MeetOverMeal is not intended for users under 18 years of age. We do not knowingly collect personal information from children.</p>
-
-    <h2>8. Changes to This Policy</h2>
-    <p>We may update this Privacy Policy from time to time. We will notify you of significant changes through the app or by email.</p>
-
-    <h2>9. Contact Us</h2>
-    <p>If you have questions about this Privacy Policy, contact us at <a href="mailto:feedback@meetovermeal.org">feedback@meetovermeal.org</a>.</p>
-  </div>
+    render();
+  </script>
 </body>
 </html>

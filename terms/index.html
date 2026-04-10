@@ -19,69 +19,321 @@
   </style>
 </head>
 <body>
-  <div class="container">
-    <a href="/" class="back">← Back to Home</a>
-    <h1>Terms of Service</h1>
-    <p class="updated">Last updated: April 4, 2026</p>
+  <div class="container" id="content"></div>
 
-    <h2>1. Acceptance of Terms</h2>
-    <p>By creating an account or using MeetOverMeal ("the App"), you agree to be bound by these Terms of Service. If you do not agree, do not use the App.</p>
+  <script>
+    const translations = {
+      en: {
+        back: '← Back to Home',
+        title: 'Terms of Service',
+        updated: 'Last updated: April 4, 2026',
+        sections: [
+          { heading: '1. Acceptance of Terms', content: '<p>By creating an account or using MeetOverMeal ("the App"), you agree to be bound by these Terms of Service. If you do not agree, do not use the App.</p>' },
+          { heading: '2. Eligibility', content: '<p>You must be at least 18 years old to use MeetOverMeal. By using the App, you represent and warrant that you meet this age requirement.</p>' },
+          { heading: '3. User Accounts', content: '<ul><li>You are responsible for maintaining the security of your account credentials.</li><li>You must provide accurate and complete profile information.</li><li>You may not create accounts for others or transfer your account.</li><li>You can delete your account at any time through the Profile settings.</li></ul>' },
+          { heading: '4. Meetup System & Deposits', content: '<ul><li><strong>Deposits:</strong> When you apply to join or host a meetup, a $5 USD deposit is temporarily frozen via Stripe.</li><li><strong>Successful Meetup:</strong> If both parties check in at the restaurant, deposits are fully refunded.</li><li><strong>No-show:</strong> If you fail to check in within the designated window, your deposit is forfeited to compensate the other party.</li><li><strong>Cancellation:</strong> Free cancellation before a match. A $3 penalty applies after a match is confirmed.</li></ul>' },
+          { heading: '5. Community Guidelines', content: '<p>You agree NOT to:</p><ul><li>Post pornographic, violent, threatening, or abusive content</li><li>Harass, bully, or intimidate other users</li><li>Create fake or misleading profiles</li><li>Use the App for any illegal purpose</li><li>Spam or send unsolicited commercial messages</li><li>Attempt to circumvent the deposit system</li></ul><p>Violations may result in immediate account suspension or permanent device ban. We operate a 24-hour reporting and review system.</p>' },
+          { heading: '6. Content Ownership', content: '<p>You retain ownership of content you post (photos, messages, declarations). By posting content, you grant MeetOverMeal a non-exclusive, royalty-free license to display it within the App for the purpose of providing the service.</p>' },
+          { heading: '7. Blocking & Reporting', content: '<p>You can block or report any user at any time. Blocking a user during an active meetup may result in a cancellation penalty as described in Section 4.</p>' },
+          { heading: '8. Subscriptions & Purchases', content: '<ul><li>Premium memberships and consumable items are available through in-app purchases.</li><li>Subscriptions auto-renew unless cancelled at least 24 hours before the renewal date.</li><li>Refunds for in-app purchases are subject to App Store / Google Play policies.</li></ul>' },
+          { heading: '9. Disclaimer', content: '<p>MeetOverMeal is a platform that facilitates social connections. We are not responsible for the behavior of individual users. Always exercise personal judgment and caution when meeting someone in person.</p>' },
+          { heading: '10. Limitation of Liability', content: '<p>To the maximum extent permitted by law, MeetOverMeal shall not be liable for any indirect, incidental, or consequential damages arising from your use of the App.</p>' },
+          { heading: '11. Changes to Terms', content: '<p>We reserve the right to modify these Terms at any time. Continued use of the App after changes constitutes acceptance of the updated Terms.</p>' },
+          { heading: '12. Contact', content: '<p>For questions about these Terms of Service, contact us at <a href="mailto:feedback@meetovermeal.org">feedback@meetovermeal.org</a>.</p>' },
+        ],
+      },
+      zh: {
+        back: '← 返回首页',
+        title: '用户协议',
+        updated: '最后更新：2026年4月4日',
+        sections: [
+          { heading: '1. 条款接受', content: '<p>当您创建帐户或使用 MeetOverMeal（"本应用"），即表示您同意受本用户协议约束。如果您不同意，请勿使用本应用。</p>' },
+          { heading: '2. 使用资格', content: '<p>您必须年满 18 周岁才能使用 MeetOverMeal。使用本应用即表示您声明并保证您符合此年龄要求。</p>' },
+          { heading: '3. 用户帐户', content: '<ul><li>您有责任维护帐户凭据的安全。</li><li>您必须提供准确完整的个人资料。</li><li>您不得为他人创建帐户或转让您的帐户。</li><li>您可以随时通过个人资料设置删除帐户。</li></ul>' },
+          { heading: '4. 约饭系统与押金', content: '<ul><li><strong>押金：</strong>当您申请加入或发起约饭时，将通过 Stripe 暂时冻结 5 美元押金。</li><li><strong>成功约饭：</strong>如果双方均在餐厅签到，押金将全额退还。</li><li><strong>爽约：</strong>如果您未能在指定时间内签到，您的押金将被没收以补偿对方。</li><li><strong>取消：</strong>匹配前可免费取消。匹配确认后取消将收取 3 美元罚金。</li></ul>' },
+          { heading: '5. 社区准则', content: '<p>您同意不得：</p><ul><li>发布色情、暴力、威胁或辱骂性内容</li><li>骚扰、欺凌或恐吓其他用户</li><li>创建虚假或误导性个人资料</li><li>将本应用用于任何非法目的</li><li>发送垃圾信息或未经请求的商业信息</li><li>试图绕过押金制度</li></ul><p>违规可能导致帐户立即被暂停或设备被永久封禁。我们运营 24 小时举报和审核系统。</p>' },
+          { heading: '6. 内容所有权', content: '<p>您保留您发布的内容（照片、消息、声明）的所有权。发布内容即表示您授予 MeetOverMeal 非独占、免版税的许可，以在应用内展示这些内容用于提供服务。</p>' },
+          { heading: '7. 拉黑与举报', content: '<p>您可以随时拉黑或举报任何用户。在活跃约饭期间拉黑用户可能导致第 4 条所述的取消罚金。</p>' },
+          { heading: '8. 订阅与购买', content: '<ul><li>高级会员和消费品可通过应用内购买获得。</li><li>订阅会自动续费，除非在续费日期前至少 24 小时取消。</li><li>应用内购买的退款受 App Store / Google Play 政策约束。</li></ul>' },
+          { heading: '9. 免责声明', content: '<p>MeetOverMeal 是一个促进社交联系的平台。我们不对个别用户的行为负责。与他人见面时请始终运用个人判断力并保持谨慎。</p>' },
+          { heading: '10. 责任限制', content: '<p>在法律允许的最大范围内，MeetOverMeal 不对因您使用本应用而产生的任何间接、附带或后果性损害承担责任。</p>' },
+          { heading: '11. 条款变更', content: '<p>我们保留随时修改本条款的权利。在条款变更后继续使用本应用即表示接受更新后的条款。</p>' },
+          { heading: '12. 联系我们', content: '<p>如对本用户协议有任何疑问，请联系 <a href="mailto:feedback@meetovermeal.org">feedback@meetovermeal.org</a>。</p>' },
+        ],
+      },
+      ja: {
+        back: '← ホームに戻る',
+        title: '利用規約',
+        updated: '最終更新日：2026年4月4日',
+        sections: [
+          { heading: '1. 規約の承諾', content: '<p>アカウントを作成するか、MeetOverMeal（「本アプリ」）を使用することにより、この利用規約に拘束されることに同意したものとします。同意しない場合は、本アプリを使用しないでください。</p>' },
+          { heading: '2. 利用資格', content: '<p>MeetOverMealのご利用には18歳以上である必要があります。本アプリを利用することにより、この年齢要件を満たしていることを表明し保証します。</p>' },
+          { heading: '3. ユーザーアカウント', content: '<ul><li>アカウント認証情報のセキュリティを維持する責任があります。</li><li>正確かつ完全なプロフィール情報を提供する必要があります。</li><li>他人のためにアカウントを作成したり、アカウントを譲渡したりすることはできません。</li><li>プロフィール設定からいつでもアカウントを削除できます。</li></ul>' },
+          { heading: '4. 食事会システムとデポジット', content: '<ul><li><strong>デポジット：</strong>食事会への申し込みまたは主催時に、Stripeを通じて5ドルのデポジットが一時的に凍結されます。</li><li><strong>食事会成功：</strong>双方がレストランでチェックインした場合、デポジットは全額返金されます。</li><li><strong>不参加：</strong>指定された時間内にチェックインしなかった場合、デポジットは没収され、相手方への補償に充てられます。</li><li><strong>キャンセル：</strong>マッチング前は無料キャンセル可能。マッチング確定後のキャンセルには3ドルのペナルティが適用されます。</li></ul>' },
+          { heading: '5. コミュニティガイドライン', content: '<p>以下の行為は禁止されています：</p><ul><li>ポルノ、暴力的、脅迫的、または虐待的なコンテンツの投稿</li><li>他のユーザーへの嫌がらせ、いじめ、脅迫</li><li>偽の、または誤解を招くプロフィールの作成</li><li>違法目的でのアプリの使用</li><li>スパムまたは未承諾の商業メッセージの送信</li><li>デポジットシステムの回避の試み</li></ul><p>違反した場合、アカウントの即時停止または永久的なデバイス禁止となる場合があります。24時間の報告・審査システムを運営しています。</p>' },
+          { heading: '6. コンテンツの所有権', content: '<p>投稿したコンテンツ（写真、メッセージ、宣言）の所有権は保持されます。コンテンツを投稿することにより、MeetOverMealにサービス提供目的でアプリ内に表示する非独占的、ロイヤリティフリーのライセンスを付与します。</p>' },
+          { heading: '7. ブロックと報告', content: '<p>いつでも他のユーザーをブロックまたは報告できます。アクティブな食事会中にユーザーをブロックすると、第4条に記載されたキャンセルペナルティが発生する場合があります。</p>' },
+          { heading: '8. サブスクリプションと購入', content: '<ul><li>プレミアム会員と消耗品はアプリ内購入で利用可能です。</li><li>サブスクリプションは更新日の少なくとも24時間前にキャンセルしない限り自動更新されます。</li><li>アプリ内購入の返金はApp Store / Google Playのポリシーに準じます。</li></ul>' },
+          { heading: '9. 免責事項', content: '<p>MeetOverMealは社会的なつながりを促進するプラットフォームです。個々のユーザーの行動について責任を負いません。対面で会う際は、常に個人の判断力を働かせ、注意を払ってください。</p>' },
+          { heading: '10. 責任の制限', content: '<p>法律で許可される最大限の範囲で、MeetOverMealはアプリの使用から生じる間接的、偶発的、または結果的な損害について責任を負いません。</p>' },
+          { heading: '11. 規約の変更', content: '<p>当社はいつでも本規約を変更する権利を留保します。変更後もアプリの使用を継続した場合、更新された規約に同意したものとみなされます。</p>' },
+          { heading: '12. お問い合わせ', content: '<p>本利用規約に関するご質問は、<a href="mailto:feedback@meetovermeal.org">feedback@meetovermeal.org</a> までお問い合わせください。</p>' },
+        ],
+      },
+      ko: {
+        back: '← 홈으로 돌아가기',
+        title: '이용약관',
+        updated: '최종 업데이트: 2026년 4월 4일',
+        sections: [
+          { heading: '1. 약관 동의', content: '<p>계정을 생성하거나 MeetOverMeal("본 앱")을 사용함으로써 본 이용약관에 구속되는 것에 동의합니다. 동의하지 않는 경우 본 앱을 사용하지 마십시오.</p>' },
+          { heading: '2. 이용 자격', content: '<p>MeetOverMeal을 사용하려면 만 18세 이상이어야 합니다. 본 앱을 사용함으로써 이 연령 요건을 충족함을 진술하고 보장합니다.</p>' },
+          { heading: '3. 사용자 계정', content: '<ul><li>계정 자격 증명의 보안을 유지할 책임이 있습니다.</li><li>정확하고 완전한 프로필 정보를 제공해야 합니다.</li><li>다른 사람을 위해 계정을 생성하거나 계정을 양도할 수 없습니다.</li><li>프로필 설정에서 언제든지 계정을 삭제할 수 있습니다.</li></ul>' },
+          { heading: '4. 식사 모임 시스템 및 보증금', content: '<ul><li><strong>보증금:</strong> 식사 모임에 신청하거나 주최할 때 Stripe를 통해 5달러의 보증금이 일시적으로 동결됩니다.</li><li><strong>성공적인 식사 모임:</strong> 양측이 레스토랑에서 체크인하면 보증금이 전액 환불됩니다.</li><li><strong>불참:</strong> 지정된 시간 내에 체크인하지 않으면 보증금이 상대방 보상을 위해 몰수됩니다.</li><li><strong>취소:</strong> 매칭 전 무료 취소 가능. 매칭 확정 후 취소 시 3달러의 페널티가 적용됩니다.</li></ul>' },
+          { heading: '5. 커뮤니티 가이드라인', content: '<p>다음 행위는 금지됩니다:</p><ul><li>음란, 폭력적, 위협적 또는 모욕적 콘텐츠 게시</li><li>다른 사용자에 대한 괴롭힘, 왕따 또는 위협</li><li>가짜 또는 오해의 소지가 있는 프로필 생성</li><li>불법적 목적으로 앱 사용</li><li>스팸 또는 원치 않는 상업적 메시지 발송</li><li>보증금 시스템 우회 시도</li></ul><p>위반 시 계정이 즉시 정지되거나 영구적으로 기기가 차단될 수 있습니다. 24시간 신고 및 검토 시스템을 운영합니다.</p>' },
+          { heading: '6. 콘텐츠 소유권', content: '<p>게시한 콘텐츠(사진, 메시지, 선언)의 소유권은 귀하에게 있습니다. 콘텐츠를 게시함으로써 MeetOverMeal에 서비스 제공 목적으로 앱 내에 표시할 비독점적, 로열티 프리 라이선스를 부여합니다.</p>' },
+          { heading: '7. 차단 및 신고', content: '<p>언제든지 다른 사용자를 차단하거나 신고할 수 있습니다. 활성 식사 모임 중 사용자를 차단하면 제4조에 설명된 취소 페널티가 발생할 수 있습니다.</p>' },
+          { heading: '8. 구독 및 구매', content: '<ul><li>프리미엄 멤버십과 소모품은 인앱 구매를 통해 이용할 수 있습니다.</li><li>구독은 갱신일 최소 24시간 전에 취소하지 않는 한 자동 갱신됩니다.</li><li>인앱 구매의 환불은 App Store / Google Play 정책에 따릅니다.</li></ul>' },
+          { heading: '9. 면책 조항', content: '<p>MeetOverMeal은 사회적 연결을 촉진하는 플랫폼입니다. 개별 사용자의 행동에 대해 책임을 지지 않습니다. 직접 만남 시 항상 개인적 판단력을 발휘하고 주의를 기울이십시오.</p>' },
+          { heading: '10. 책임 제한', content: '<p>법률이 허용하는 최대 범위 내에서 MeetOverMeal은 앱 사용으로 인한 간접적, 부수적 또는 결과적 손해에 대해 책임을 지지 않습니다.</p>' },
+          { heading: '11. 약관 변경', content: '<p>당사는 언제든지 본 약관을 수정할 권리를 보유합니다. 변경 후 앱을 계속 사용하면 업데이트된 약관에 동의한 것으로 간주됩니다.</p>' },
+          { heading: '12. 문의', content: '<p>본 이용약관에 대한 문의는 <a href="mailto:feedback@meetovermeal.org">feedback@meetovermeal.org</a>으로 연락하십시오.</p>' },
+        ],
+      },
+      es: {
+        back: '← Volver al inicio',
+        title: 'Términos de Servicio',
+        updated: 'Última actualización: 4 de abril de 2026',
+        sections: [
+          { heading: '1. Aceptación de los Términos', content: '<p>Al crear una cuenta o usar MeetOverMeal ("la App"), acepta quedar vinculado por estos Términos de Servicio. Si no está de acuerdo, no use la App.</p>' },
+          { heading: '2. Elegibilidad', content: '<p>Debe tener al menos 18 años para usar MeetOverMeal. Al usar la App, declara y garantiza que cumple con este requisito de edad.</p>' },
+          { heading: '3. Cuentas de Usuario', content: '<ul><li>Es responsable de mantener la seguridad de sus credenciales de cuenta.</li><li>Debe proporcionar información de perfil precisa y completa.</li><li>No puede crear cuentas para otros ni transferir su cuenta.</li><li>Puede eliminar su cuenta en cualquier momento desde la Configuración del perfil.</li></ul>' },
+          { heading: '4. Sistema de Encuentros y Depósitos', content: '<ul><li><strong>Depósitos:</strong> Al solicitar unirse o crear un encuentro, se congela temporalmente un depósito de $5 USD a través de Stripe.</li><li><strong>Encuentro exitoso:</strong> Si ambas partes registran su llegada al restaurante, los depósitos se reembolsan completamente.</li><li><strong>No presentarse:</strong> Si no registra su llegada dentro del período designado, su depósito se pierde para compensar a la otra parte.</li><li><strong>Cancelación:</strong> Cancelación gratuita antes del emparejamiento. Se aplica una penalización de $3 después de confirmar un emparejamiento.</li></ul>' },
+          { heading: '5. Normas de la Comunidad', content: '<p>Acepta NO:</p><ul><li>Publicar contenido pornográfico, violento, amenazante o abusivo</li><li>Acosar, intimidar o amenazar a otros usuarios</li><li>Crear perfiles falsos o engañosos</li><li>Usar la App para cualquier propósito ilegal</li><li>Enviar spam o mensajes comerciales no solicitados</li><li>Intentar eludir el sistema de depósitos</li></ul><p>Las violaciones pueden resultar en la suspensión inmediata de la cuenta o la prohibición permanente del dispositivo. Operamos un sistema de informes y revisión las 24 horas.</p>' },
+          { heading: '6. Propiedad del Contenido', content: '<p>Conserva la propiedad del contenido que publica (fotos, mensajes, declaraciones). Al publicar contenido, otorga a MeetOverMeal una licencia no exclusiva y libre de regalías para mostrarlo dentro de la App con el fin de proporcionar el servicio.</p>' },
+          { heading: '7. Bloqueo e Informes', content: '<p>Puede bloquear o reportar a cualquier usuario en cualquier momento. Bloquear a un usuario durante un encuentro activo puede resultar en una penalización por cancelación según lo descrito en la Sección 4.</p>' },
+          { heading: '8. Suscripciones y Compras', content: '<ul><li>Las membresías premium y artículos consumibles están disponibles a través de compras dentro de la aplicación.</li><li>Las suscripciones se renuevan automáticamente a menos que se cancelen al menos 24 horas antes de la fecha de renovación.</li><li>Los reembolsos por compras dentro de la aplicación están sujetos a las políticas de App Store / Google Play.</li></ul>' },
+          { heading: '9. Descargo de Responsabilidad', content: '<p>MeetOverMeal es una plataforma que facilita conexiones sociales. No somos responsables del comportamiento de usuarios individuales. Siempre ejerza su juicio personal y precaución al reunirse con alguien en persona.</p>' },
+          { heading: '10. Limitación de Responsabilidad', content: '<p>En la máxima medida permitida por la ley, MeetOverMeal no será responsable de ningún daño indirecto, incidental o consecuente que surja de su uso de la App.</p>' },
+          { heading: '11. Cambios en los Términos', content: '<p>Nos reservamos el derecho de modificar estos Términos en cualquier momento. El uso continuado de la App después de los cambios constituye la aceptación de los Términos actualizados.</p>' },
+          { heading: '12. Contacto', content: '<p>Para preguntas sobre estos Términos de Servicio, contáctenos en <a href="mailto:feedback@meetovermeal.org">feedback@meetovermeal.org</a>.</p>' },
+        ],
+      },
+      fr: {
+        back: '← Retour à l\'accueil',
+        title: 'Conditions d\'Utilisation',
+        updated: 'Dernière mise à jour : 4 avril 2026',
+        sections: [
+          { heading: '1. Acceptation des Conditions', content: '<p>En créant un compte ou en utilisant MeetOverMeal (« l\'Application »), vous acceptez d\'être lié(e) par ces Conditions d\'Utilisation. Si vous n\'êtes pas d\'accord, n\'utilisez pas l\'Application.</p>' },
+          { heading: '2. Éligibilité', content: '<p>Vous devez avoir au moins 18 ans pour utiliser MeetOverMeal. En utilisant l\'Application, vous déclarez et garantissez que vous remplissez cette condition d\'âge.</p>' },
+          { heading: '3. Comptes Utilisateurs', content: '<ul><li>Vous êtes responsable du maintien de la sécurité de vos identifiants de compte.</li><li>Vous devez fournir des informations de profil exactes et complètes.</li><li>Vous ne pouvez pas créer de comptes pour d\'autres personnes ni transférer votre compte.</li><li>Vous pouvez supprimer votre compte à tout moment via les paramètres du Profil.</li></ul>' },
+          { heading: '4. Système de Repas et Cautions', content: '<ul><li><strong>Cautions :</strong> Lorsque vous postulez pour rejoindre ou organiser un repas, une caution de 5 USD est temporairement gelée via Stripe.</li><li><strong>Repas réussi :</strong> Si les deux parties s\'enregistrent au restaurant, les cautions sont intégralement remboursées.</li><li><strong>Absence :</strong> Si vous ne vous enregistrez pas dans le délai prévu, votre caution est confisquée pour compenser l\'autre partie.</li><li><strong>Annulation :</strong> Annulation gratuite avant un match. Une pénalité de 3 $ s\'applique après la confirmation d\'un match.</li></ul>' },
+          { heading: '5. Règles de la Communauté', content: '<p>Vous acceptez de NE PAS :</p><ul><li>Publier du contenu pornographique, violent, menaçant ou abusif</li><li>Harceler, intimider ou menacer d\'autres utilisateurs</li><li>Créer de faux profils ou des profils trompeurs</li><li>Utiliser l\'Application à des fins illégales</li><li>Envoyer du spam ou des messages commerciaux non sollicités</li><li>Tenter de contourner le système de caution</li></ul><p>Les violations peuvent entraîner la suspension immédiate du compte ou l\'interdiction permanente de l\'appareil. Nous exploitons un système de signalement et de révision 24h/24.</p>' },
+          { heading: '6. Propriété du Contenu', content: '<p>Vous conservez la propriété du contenu que vous publiez (photos, messages, déclarations). En publiant du contenu, vous accordez à MeetOverMeal une licence non exclusive et libre de droits pour l\'afficher dans l\'Application afin de fournir le service.</p>' },
+          { heading: '7. Blocage et Signalement', content: '<p>Vous pouvez bloquer ou signaler tout utilisateur à tout moment. Le blocage d\'un utilisateur pendant un repas actif peut entraîner une pénalité d\'annulation telle que décrite à la Section 4.</p>' },
+          { heading: '8. Abonnements et Achats', content: '<ul><li>Les abonnements premium et les articles consommables sont disponibles via les achats intégrés.</li><li>Les abonnements sont renouvelés automatiquement sauf annulation au moins 24 heures avant la date de renouvellement.</li><li>Les remboursements des achats intégrés sont soumis aux politiques de l\'App Store / Google Play.</li></ul>' },
+          { heading: '9. Avertissement', content: '<p>MeetOverMeal est une plateforme qui facilite les connexions sociales. Nous ne sommes pas responsables du comportement des utilisateurs individuels. Faites toujours preuve de jugement personnel et de prudence lorsque vous rencontrez quelqu\'un en personne.</p>' },
+          { heading: '10. Limitation de Responsabilité', content: '<p>Dans la mesure maximale permise par la loi, MeetOverMeal ne sera pas responsable des dommages indirects, accessoires ou consécutifs découlant de votre utilisation de l\'Application.</p>' },
+          { heading: '11. Modification des Conditions', content: '<p>Nous nous réservons le droit de modifier ces Conditions à tout moment. L\'utilisation continue de l\'Application après les modifications constitue l\'acceptation des Conditions mises à jour.</p>' },
+          { heading: '12. Contact', content: '<p>Pour toute question concernant ces Conditions d\'Utilisation, contactez-nous à <a href="mailto:feedback@meetovermeal.org">feedback@meetovermeal.org</a>.</p>' },
+        ],
+      },
+      de: {
+        back: '← Zurück zur Startseite',
+        title: 'Nutzungsbedingungen',
+        updated: 'Letzte Aktualisierung: 4. April 2026',
+        sections: [
+          { heading: '1. Annahme der Bedingungen', content: '<p>Durch die Erstellung eines Kontos oder die Nutzung von MeetOverMeal („die App") stimmen Sie zu, an diese Nutzungsbedingungen gebunden zu sein. Wenn Sie nicht zustimmen, nutzen Sie die App nicht.</p>' },
+          { heading: '2. Berechtigung', content: '<p>Sie müssen mindestens 18 Jahre alt sein, um MeetOverMeal zu nutzen. Durch die Nutzung der App versichern und garantieren Sie, dass Sie diese Altersanforderung erfüllen.</p>' },
+          { heading: '3. Benutzerkonten', content: '<ul><li>Sie sind verantwortlich für die Sicherheit Ihrer Kontodaten.</li><li>Sie müssen genaue und vollständige Profilinformationen angeben.</li><li>Sie dürfen keine Konten für andere erstellen oder Ihr Konto übertragen.</li><li>Sie können Ihr Konto jederzeit über die Profileinstellungen löschen.</li></ul>' },
+          { heading: '4. Essens-System & Kaution', content: '<ul><li><strong>Kaution:</strong> Bei der Bewerbung für ein Treffen wird eine Kaution von 5 USD über Stripe vorübergehend eingefroren.</li><li><strong>Erfolgreiches Treffen:</strong> Wenn beide Parteien im Restaurant einchecken, wird die Kaution vollständig erstattet.</li><li><strong>Nichterscheinen:</strong> Wenn Sie nicht innerhalb des vorgesehenen Zeitfensters einchecken, wird Ihre Kaution zur Entschädigung der anderen Partei einbehalten.</li><li><strong>Stornierung:</strong> Kostenlose Stornierung vor einem Match. Nach Bestätigung eines Matches fällt eine Strafe von 3 $ an.</li></ul>' },
+          { heading: '5. Community-Richtlinien', content: '<p>Sie stimmen zu, NICHT:</p><ul><li>Pornografische, gewalttätige, bedrohende oder missbräuchliche Inhalte zu veröffentlichen</li><li>Andere Benutzer zu belästigen, zu mobben oder einzuschüchtern</li><li>Falsche oder irreführende Profile zu erstellen</li><li>Die App für illegale Zwecke zu nutzen</li><li>Spam oder unaufgeforderte kommerzielle Nachrichten zu senden</li><li>Das Kautionssystem zu umgehen</li></ul><p>Verstöße können zur sofortigen Kontosperrung oder zum permanenten Gerätebann führen. Wir betreiben ein 24-Stunden-Melde- und Überprüfungssystem.</p>' },
+          { heading: '6. Eigentum an Inhalten', content: '<p>Sie behalten das Eigentum an von Ihnen veröffentlichten Inhalten (Fotos, Nachrichten, Erklärungen). Durch die Veröffentlichung gewähren Sie MeetOverMeal eine nicht-exklusive, lizenzgebührenfreie Lizenz zur Anzeige innerhalb der App zum Zweck der Diensterbringung.</p>' },
+          { heading: '7. Blockieren & Melden', content: '<p>Sie können jederzeit jeden Benutzer blockieren oder melden. Das Blockieren eines Benutzers während eines aktiven Treffens kann zu einer Stornierungsstrafe gemäß Abschnitt 4 führen.</p>' },
+          { heading: '8. Abonnements & Käufe', content: '<ul><li>Premium-Mitgliedschaften und Verbrauchsartikel sind über In-App-Käufe erhältlich.</li><li>Abonnements verlängern sich automatisch, sofern sie nicht mindestens 24 Stunden vor dem Verlängerungsdatum gekündigt werden.</li><li>Rückerstattungen für In-App-Käufe unterliegen den Richtlinien des App Store / Google Play.</li></ul>' },
+          { heading: '9. Haftungsausschluss', content: '<p>MeetOverMeal ist eine Plattform, die soziale Verbindungen erleichtert. Wir sind nicht verantwortlich für das Verhalten einzelner Benutzer. Üben Sie immer persönliches Urteilsvermögen und Vorsicht aus, wenn Sie jemanden persönlich treffen.</p>' },
+          { heading: '10. Haftungsbeschränkung', content: '<p>Im maximal gesetzlich zulässigen Umfang haftet MeetOverMeal nicht für indirekte, zufällige oder Folgeschäden, die aus Ihrer Nutzung der App entstehen.</p>' },
+          { heading: '11. Änderungen der Bedingungen', content: '<p>Wir behalten uns das Recht vor, diese Bedingungen jederzeit zu ändern. Die fortgesetzte Nutzung der App nach Änderungen gilt als Annahme der aktualisierten Bedingungen.</p>' },
+          { heading: '12. Kontakt', content: '<p>Bei Fragen zu diesen Nutzungsbedingungen kontaktieren Sie uns unter <a href="mailto:feedback@meetovermeal.org">feedback@meetovermeal.org</a>.</p>' },
+        ],
+      },
+      pt: {
+        back: '← Voltar ao início',
+        title: 'Termos de Serviço',
+        updated: 'Última atualização: 4 de abril de 2026',
+        sections: [
+          { heading: '1. Aceitação dos Termos', content: '<p>Ao criar uma conta ou usar o MeetOverMeal ("o App"), você concorda em ficar vinculado a estes Termos de Serviço. Se não concordar, não use o App.</p>' },
+          { heading: '2. Elegibilidade', content: '<p>Você deve ter pelo menos 18 anos para usar o MeetOverMeal. Ao usar o App, você declara e garante que atende a este requisito de idade.</p>' },
+          { heading: '3. Contas de Usuário', content: '<ul><li>Você é responsável por manter a segurança de suas credenciais de conta.</li><li>Deve fornecer informações de perfil precisas e completas.</li><li>Não pode criar contas para outros ou transferir sua conta.</li><li>Pode excluir sua conta a qualquer momento nas Configurações do perfil.</li></ul>' },
+          { heading: '4. Sistema de Encontros e Depósitos', content: '<ul><li><strong>Depósitos:</strong> Ao se candidatar ou criar um encontro, um depósito de US$ 5 é temporariamente congelado via Stripe.</li><li><strong>Encontro bem-sucedido:</strong> Se ambas as partes fizerem check-in no restaurante, os depósitos são totalmente reembolsados.</li><li><strong>Não comparecimento:</strong> Se você não fizer check-in dentro do período designado, seu depósito é perdido para compensar a outra parte.</li><li><strong>Cancelamento:</strong> Cancelamento gratuito antes do match. Uma penalidade de US$ 3 se aplica após a confirmação do match.</li></ul>' },
+          { heading: '5. Diretrizes da Comunidade', content: '<p>Você concorda em NÃO:</p><ul><li>Publicar conteúdo pornográfico, violento, ameaçador ou abusivo</li><li>Assediar, intimidar ou ameaçar outros usuários</li><li>Criar perfis falsos ou enganosos</li><li>Usar o App para qualquer finalidade ilegal</li><li>Enviar spam ou mensagens comerciais não solicitadas</li><li>Tentar burlar o sistema de depósitos</li></ul><p>Violações podem resultar em suspensão imediata da conta ou banimento permanente do dispositivo. Operamos um sistema de denúncia e revisão 24 horas.</p>' },
+          { heading: '6. Propriedade do Conteúdo', content: '<p>Você mantém a propriedade do conteúdo que publica (fotos, mensagens, declarações). Ao publicar conteúdo, você concede ao MeetOverMeal uma licença não exclusiva e livre de royalties para exibi-lo dentro do App com o objetivo de fornecer o serviço.</p>' },
+          { heading: '7. Bloqueio e Denúncia', content: '<p>Você pode bloquear ou denunciar qualquer usuário a qualquer momento. Bloquear um usuário durante um encontro ativo pode resultar em uma penalidade de cancelamento conforme descrito na Seção 4.</p>' },
+          { heading: '8. Assinaturas e Compras', content: '<ul><li>Assinaturas premium e itens consumíveis estão disponíveis através de compras no aplicativo.</li><li>As assinaturas são renovadas automaticamente, a menos que sejam canceladas pelo menos 24 horas antes da data de renovação.</li><li>Reembolsos de compras no aplicativo estão sujeitos às políticas da App Store / Google Play.</li></ul>' },
+          { heading: '9. Isenção de Responsabilidade', content: '<p>O MeetOverMeal é uma plataforma que facilita conexões sociais. Não somos responsáveis pelo comportamento de usuários individuais. Sempre exerça seu julgamento pessoal e cautela ao encontrar alguém pessoalmente.</p>' },
+          { heading: '10. Limitação de Responsabilidade', content: '<p>Na máxima extensão permitida por lei, o MeetOverMeal não será responsável por quaisquer danos indiretos, incidentais ou consequentes decorrentes do uso do App.</p>' },
+          { heading: '11. Alterações nos Termos', content: '<p>Reservamo-nos o direito de modificar estes Termos a qualquer momento. O uso contínuo do App após as alterações constitui aceitação dos Termos atualizados.</p>' },
+          { heading: '12. Contato', content: '<p>Para dúvidas sobre estes Termos de Serviço, entre em contato pelo <a href="mailto:feedback@meetovermeal.org">feedback@meetovermeal.org</a>.</p>' },
+        ],
+      },
+      ru: {
+        back: '← Вернуться на главную',
+        title: 'Условия Использования',
+        updated: 'Последнее обновление: 4 апреля 2026 г.',
+        sections: [
+          { heading: '1. Принятие условий', content: '<p>Создавая учётную запись или используя MeetOverMeal («Приложение»), вы соглашаетесь соблюдать настоящие Условия Использования. Если вы не согласны, не используйте Приложение.</p>' },
+          { heading: '2. Право на использование', content: '<p>Для использования MeetOverMeal вам должно быть не менее 18 лет. Используя Приложение, вы подтверждаете и гарантируете соответствие этому возрастному требованию.</p>' },
+          { heading: '3. Учётные записи', content: '<ul><li>Вы несёте ответственность за безопасность своих учётных данных.</li><li>Необходимо предоставить точную и полную информацию профиля.</li><li>Запрещено создавать учётные записи для других лиц или передавать свою учётную запись.</li><li>Вы можете удалить учётную запись в любое время через Настройки профиля.</li></ul>' },
+          { heading: '4. Система встреч и залоги', content: '<ul><li><strong>Залоги:</strong> При подаче заявки или создании встречи через Stripe временно замораживается залог в размере $5.</li><li><strong>Успешная встреча:</strong> Если обе стороны зарегистрировались в ресторане, залоги полностью возвращаются.</li><li><strong>Неявка:</strong> Если вы не зарегистрируетесь в установленные сроки, залог удерживается в пользу другой стороны.</li><li><strong>Отмена:</strong> Бесплатная отмена до совпадения. После подтверждения совпадения взимается штраф $3.</li></ul>' },
+          { heading: '5. Правила сообщества', content: '<p>Вы обязуетесь НЕ:</p><ul><li>Публиковать порнографический, насильственный, угрожающий или оскорбительный контент</li><li>Преследовать, запугивать или угрожать другим пользователям</li><li>Создавать фальшивые или вводящие в заблуждение профили</li><li>Использовать Приложение в незаконных целях</li><li>Рассылать спам или нежелательные коммерческие сообщения</li><li>Пытаться обойти систему залогов</li></ul><p>Нарушения могут привести к немедленной блокировке аккаунта или постоянному бану устройства. Мы работаем круглосуточно с жалобами и проверками.</p>' },
+          { heading: '6. Право собственности на контент', content: '<p>Вы сохраняете права на публикуемый контент (фото, сообщения, декларации). Публикуя контент, вы предоставляете MeetOverMeal неисключительную безвозмездную лицензию на его отображение в Приложении для предоставления услуги.</p>' },
+          { heading: '7. Блокировка и жалобы', content: '<p>Вы можете заблокировать или пожаловаться на любого пользователя в любое время. Блокировка пользователя во время активной встречи может повлечь штраф за отмену, описанный в Разделе 4.</p>' },
+          { heading: '8. Подписки и покупки', content: '<ul><li>Премиум-подписки и расходные товары доступны через покупки в приложении.</li><li>Подписки продлеваются автоматически, если не отменены минимум за 24 часа до даты продления.</li><li>Возвраты за покупки в приложении регулируются политиками App Store / Google Play.</li></ul>' },
+          { heading: '9. Отказ от ответственности', content: '<p>MeetOverMeal — платформа для социальных связей. Мы не несём ответственности за поведение отдельных пользователей. Всегда проявляйте осторожность при личных встречах.</p>' },
+          { heading: '10. Ограничение ответственности', content: '<p>В максимальной степени, разрешённой законом, MeetOverMeal не несёт ответственности за косвенные, случайные или последующие убытки, возникшие в результате использования Приложения.</p>' },
+          { heading: '11. Изменение условий', content: '<p>Мы оставляем за собой право изменять настоящие Условия в любое время. Продолжение использования Приложения после изменений означает принятие обновлённых Условий.</p>' },
+          { heading: '12. Контакты', content: '<p>По вопросам об Условиях Использования обращайтесь по адресу <a href="mailto:feedback@meetovermeal.org">feedback@meetovermeal.org</a>.</p>' },
+        ],
+      },
+      ar: {
+        back: '← العودة للرئيسية',
+        title: 'شروط الخدمة',
+        updated: 'آخر تحديث: 4 أبريل 2026',
+        sections: [
+          { heading: '1. قبول الشروط', content: '<p>بإنشاء حساب أو استخدام MeetOverMeal ("التطبيق")، فإنك توافق على الالتزام بشروط الخدمة هذه. إذا كنت لا توافق، فلا تستخدم التطبيق.</p>' },
+          { heading: '2. الأهلية', content: '<p>يجب أن يكون عمرك 18 عامًا على الأقل لاستخدام MeetOverMeal. باستخدام التطبيق، تقر وتضمن أنك تستوفي هذا الشرط العمري.</p>' },
+          { heading: '3. حسابات المستخدمين', content: '<ul><li>تتحمل مسؤولية الحفاظ على أمان بيانات حسابك.</li><li>يجب تقديم معلومات ملف شخصي دقيقة وكاملة.</li><li>لا يجوز إنشاء حسابات لآخرين أو نقل حسابك.</li><li>يمكنك حذف حسابك في أي وقت من إعدادات الملف الشخصي.</li></ul>' },
+          { heading: '4. نظام اللقاءات والتأمين', content: '<ul><li><strong>التأمين:</strong> عند التقدم للانضمام أو إنشاء لقاء، يتم تجميد تأمين بقيمة 5 دولارات مؤقتًا عبر Stripe.</li><li><strong>لقاء ناجح:</strong> إذا سجل الطرفان حضورهما في المطعم، يُسترد التأمين بالكامل.</li><li><strong>عدم الحضور:</strong> إذا لم تسجل حضورك خلال المهلة المحددة، يُصادر تأمينك لتعويض الطرف الآخر.</li><li><strong>الإلغاء:</strong> إلغاء مجاني قبل المطابقة. تُطبق غرامة 3 دولارات بعد تأكيد المطابقة.</li></ul>' },
+          { heading: '5. إرشادات المجتمع', content: '<p>أنت توافق على عدم:</p><ul><li>نشر محتوى إباحي أو عنيف أو تهديدي أو مسيء</li><li>مضايقة أو تخويف أو ترهيب مستخدمين آخرين</li><li>إنشاء ملفات شخصية مزيفة أو مضللة</li><li>استخدام التطبيق لأي غرض غير قانوني</li><li>إرسال رسائل غير مرغوبة أو تجارية</li><li>محاولة التحايل على نظام التأمين</li></ul><p>قد تؤدي المخالفات إلى تعليق الحساب فورًا أو حظر الجهاز نهائيًا. نحن نعمل بنظام إبلاغ ومراجعة على مدار 24 ساعة.</p>' },
+          { heading: '6. ملكية المحتوى', content: '<p>تحتفظ بملكية المحتوى الذي تنشره (الصور والرسائل والإعلانات). بنشر المحتوى، تمنح MeetOverMeal ترخيصًا غير حصري وبدون حقوق ملكية لعرضه داخل التطبيق لغرض تقديم الخدمة.</p>' },
+          { heading: '7. الحظر والإبلاغ', content: '<p>يمكنك حظر أو الإبلاغ عن أي مستخدم في أي وقت. قد يؤدي حظر مستخدم أثناء لقاء نشط إلى غرامة إلغاء كما هو موضح في القسم 4.</p>' },
+          { heading: '8. الاشتراكات والمشتريات', content: '<ul><li>العضويات المميزة والعناصر الاستهلاكية متاحة عبر عمليات الشراء داخل التطبيق.</li><li>تتجدد الاشتراكات تلقائيًا ما لم يتم إلغاؤها قبل 24 ساعة على الأقل من تاريخ التجديد.</li><li>تخضع المبالغ المستردة لسياسات App Store / Google Play.</li></ul>' },
+          { heading: '9. إخلاء المسؤولية', content: '<p>MeetOverMeal منصة لتسهيل التواصل الاجتماعي. نحن غير مسؤولين عن سلوك المستخدمين الأفراد. مارس دائمًا حكمك الشخصي والحذر عند مقابلة شخص ما.</p>' },
+          { heading: '10. تحديد المسؤولية', content: '<p>إلى أقصى حد يسمح به القانون، لن تكون MeetOverMeal مسؤولة عن أي أضرار غير مباشرة أو عرضية أو تبعية ناتجة عن استخدامك للتطبيق.</p>' },
+          { heading: '11. تعديل الشروط', content: '<p>نحتفظ بالحق في تعديل هذه الشروط في أي وقت. يعتبر الاستمرار في استخدام التطبيق بعد التعديلات قبولًا للشروط المحدثة.</p>' },
+          { heading: '12. اتصل بنا', content: '<p>للاستفسارات حول شروط الخدمة، تواصل معنا عبر <a href="mailto:feedback@meetovermeal.org">feedback@meetovermeal.org</a>.</p>' },
+        ],
+      },
+      hi: {
+        back: '← होम पर वापस जाएं',
+        title: 'सेवा की शर्तें',
+        updated: 'अंतिम अपडेट: 4 अप्रैल 2026',
+        sections: [
+          { heading: '1. शर्तों की स्वीकृति', content: '<p>खाता बनाकर या MeetOverMeal ("ऐप") का उपयोग करके, आप इन सेवा की शर्तों से बंधे होने के लिए सहमत होते हैं। यदि आप सहमत नहीं हैं, तो ऐप का उपयोग न करें।</p>' },
+          { heading: '2. पात्रता', content: '<p>MeetOverMeal का उपयोग करने के लिए आपकी आयु कम से कम 18 वर्ष होनी चाहिए। ऐप का उपयोग करके, आप प्रतिनिधित्व करते हैं और गारंटी देते हैं कि आप इस आयु की आवश्यकता को पूरा करते हैं।</p>' },
+          { heading: '3. उपयोगकर्ता खाते', content: '<ul><li>आप अपने खाता क्रेडेंशियल की सुरक्षा बनाए रखने के लिए जिम्मेदार हैं।</li><li>आपको सटीक और पूर्ण प्रोफ़ाइल जानकारी प्रदान करनी होगी।</li><li>आप अन्य लोगों के लिए खाते नहीं बना सकते या अपना खाता स्थानांतरित नहीं कर सकते।</li><li>आप प्रोफ़ाइल सेटिंग्स से कभी भी अपना खाता हटा सकते हैं।</li></ul>' },
+          { heading: '4. मीटअप सिस्टम और जमा राशि', content: '<ul><li><strong>जमा राशि:</strong> जब आप किसी मीटअप में शामिल होने या मेजबानी करने के लिए आवेदन करते हैं, तो Stripe के माध्यम से $5 USD की जमा राशि अस्थायी रूप से फ्रीज की जाती है।</li><li><strong>सफल मीटअप:</strong> यदि दोनों पक्ष रेस्तरां में चेक-इन करते हैं, तो जमा राशि पूरी तरह से वापस कर दी जाती है।</li><li><strong>गैर-हाजिरी:</strong> यदि आप निर्दिष्ट समय के भीतर चेक-इन नहीं करते हैं, तो दूसरे पक्ष को क्षतिपूर्ति के लिए आपकी जमा राशि जब्त कर ली जाती है।</li><li><strong>रद्दीकरण:</strong> मैच से पहले मुफ्त रद्दीकरण। मैच की पुष्टि के बाद $3 का जुर्माना लागू होता है।</li></ul>' },
+          { heading: '5. सामुदायिक दिशानिर्देश', content: '<p>आप निम्नलिखित न करने पर सहमत होते हैं:</p><ul><li>अश्लील, हिंसक, धमकी भरी या अपमानजनक सामग्री पोस्ट करना</li><li>अन्य उपयोगकर्ताओं को परेशान करना, धमकाना या डराना</li><li>नकली या भ्रामक प्रोफ़ाइल बनाना</li><li>किसी भी अवैध उद्देश्य के लिए ऐप का उपयोग करना</li><li>स्पैम या अनचाहे व्यावसायिक संदेश भेजना</li><li>जमा राशि प्रणाली को दरकिनार करने का प्रयास करना</li></ul><p>उल्लंघन के परिणामस्वरूप तत्काल खाता निलंबन या स्थायी डिवाइस प्रतिबंध हो सकता है। हम 24 घंटे की रिपोर्टिंग और समीक्षा प्रणाली संचालित करते हैं।</p>' },
+          { heading: '6. सामग्री का स्वामित्व', content: '<p>आप अपनी पोस्ट की गई सामग्री (फ़ोटो, संदेश, घोषणाएं) का स्वामित्व बनाए रखते हैं। सामग्री पोस्ट करके, आप MeetOverMeal को सेवा प्रदान करने के उद्देश्य से ऐप के भीतर इसे प्रदर्शित करने का गैर-अनन्य, रॉयल्टी-मुक्त लाइसेंस प्रदान करते हैं।</p>' },
+          { heading: '7. ब्लॉक करना और रिपोर्ट करना', content: '<p>आप किसी भी समय किसी भी उपयोगकर्ता को ब्लॉक या रिपोर्ट कर सकते हैं। सक्रिय मीटअप के दौरान किसी उपयोगकर्ता को ब्लॉक करने से धारा 4 में वर्णित रद्दीकरण जुर्माना हो सकता है।</p>' },
+          { heading: '8. सदस्यता और खरीदारी', content: '<ul><li>प्रीमियम सदस्यता और उपभोज्य आइटम इन-ऐप खरीदारी के माध्यम से उपलब्ध हैं।</li><li>सदस्यता स्वचालित रूप से नवीनीकृत होती है जब तक कि नवीनीकरण तिथि से कम से कम 24 घंटे पहले रद्द नहीं किया जाता।</li><li>इन-ऐप खरीदारी के लिए रिफंड App Store / Google Play नीतियों के अधीन हैं।</li></ul>' },
+          { heading: '9. अस्वीकरण', content: '<p>MeetOverMeal एक ऐसा प्लेटफ़ॉर्म है जो सामाजिक संपर्क को सुविधाजनक बनाता है। हम व्यक्तिगत उपयोगकर्ताओं के व्यवहार के लिए जिम्मेदार नहीं हैं। किसी से व्यक्तिगत रूप से मिलते समय हमेशा अपना व्यक्तिगत निर्णय और सावधानी बरतें।</p>' },
+          { heading: '10. दायित्व की सीमा', content: '<p>कानून द्वारा अनुमत अधिकतम सीमा तक, MeetOverMeal ऐप के आपके उपयोग से उत्पन्न किसी भी अप्रत्यक्ष, आकस्मिक, या परिणामी क्षति के लिए उत्तरदायी नहीं होगा।</p>' },
+          { heading: '11. शर्तों में परिवर्तन', content: '<p>हम किसी भी समय इन शर्तों को संशोधित करने का अधिकार सुरक्षित रखते हैं। परिवर्तनों के बाद ऐप का निरंतर उपयोग अपडेट की गई शर्तों की स्वीकृति मानी जाएगी।</p>' },
+          { heading: '12. संपर्क करें', content: '<p>इन सेवा की शर्तों के बारे में प्रश्नों के लिए, <a href="mailto:feedback@meetovermeal.org">feedback@meetovermeal.org</a> पर संपर्क करें।</p>' },
+        ],
+      },
+      th: {
+        back: '← กลับหน้าหลัก',
+        title: 'ข้อกำหนดการใช้งาน',
+        updated: 'อัปเดตล่าสุด: 4 เมษายน 2026',
+        sections: [
+          { heading: '1. การยอมรับข้อกำหนด', content: '<p>การสร้างบัญชีหรือใช้ MeetOverMeal ("แอป") ถือว่าคุณยอมรับข้อกำหนดการใช้งานเหล่านี้ หากคุณไม่ยอมรับ กรุณาอย่าใช้แอป</p>' },
+          { heading: '2. คุณสมบัติ', content: '<p>คุณต้องมีอายุอย่างน้อย 18 ปีเพื่อใช้ MeetOverMeal การใช้แอปถือว่าคุณรับรองและรับประกันว่าคุณมีคุณสมบัติตามข้อกำหนดอายุนี้</p>' },
+          { heading: '3. บัญชีผู้ใช้', content: '<ul><li>คุณรับผิดชอบในการรักษาความปลอดภัยของข้อมูลบัญชี</li><li>คุณต้องให้ข้อมูลโปรไฟล์ที่ถูกต้องและครบถ้วน</li><li>ห้ามสร้างบัญชีให้ผู้อื่นหรือโอนบัญชี</li><li>คุณสามารถลบบัญชีได้ตลอดเวลาผ่านการตั้งค่าโปรไฟล์</li></ul>' },
+          { heading: '4. ระบบนัดพบและเงินมัดจำ', content: '<ul><li><strong>เงินมัดจำ:</strong> เมื่อสมัครเข้าร่วมหรือจัดนัดพบ จะถูกอายัดเงินมัดจำ $5 ผ่าน Stripe ชั่วคราว</li><li><strong>นัดพบสำเร็จ:</strong> หากทั้งสองฝ่ายเช็คอินที่ร้านอาหาร เงินมัดจำจะคืนเต็มจำนวน</li><li><strong>ไม่มาตามนัด:</strong> หากไม่เช็คอินภายในเวลาที่กำหนด เงินมัดจำจะถูกริบเพื่อชดเชยอีกฝ่าย</li><li><strong>ยกเลิก:</strong> ยกเลิกฟรีก่อนจับคู่ หลังยืนยันจับคู่แล้วจะเสียค่าปรับ $3</li></ul>' },
+          { heading: '5. กฎชุมชน', content: '<p>คุณยอมรับว่าจะไม่:</p><ul><li>โพสต์เนื้อหาลามก รุนแรง ข่มขู่ หรือล่วงละเมิด</li><li>คุกคาม กลั่นแกล้ง หรือข่มขู่ผู้ใช้คนอื่น</li><li>สร้างโปรไฟล์ปลอมหรือหลอกลวง</li><li>ใช้แอปเพื่อวัตถุประสงค์ที่ผิดกฎหมาย</li><li>ส่งสแปมหรือข้อความเชิงพาณิชย์ที่ไม่ได้รับอนุญาต</li><li>พยายามหลีกเลี่ยงระบบเงินมัดจำ</li></ul><p>การละเมิดอาจส่งผลให้ถูกระงับบัญชีทันทีหรือแบนอุปกรณ์ถาวร เราดำเนินระบบรายงานและตรวจสอบตลอด 24 ชั่วโมง</p>' },
+          { heading: '6. ความเป็นเจ้าของเนื้อหา', content: '<p>คุณยังคงเป็นเจ้าของเนื้อหาที่โพสต์ (ภาพถ่าย ข้อความ ประกาศ) การโพสต์เนื้อหาถือว่าคุณให้สิทธิ์ MeetOverMeal ในการแสดงภายในแอปแบบไม่จำกัดเฉพาะและปลอดค่าลิขสิทธิ์เพื่อจัดหาบริการ</p>' },
+          { heading: '7. การบล็อกและรายงาน', content: '<p>คุณสามารถบล็อกหรือรายงานผู้ใช้คนใดก็ได้ตลอดเวลา การบล็อกผู้ใช้ระหว่างนัดพบที่ยังดำเนินอยู่อาจส่งผลให้เกิดค่าปรับตามที่อธิบายในข้อ 4</p>' },
+          { heading: '8. การสมัครสมาชิกและการซื้อ', content: '<ul><li>สมาชิกพรีเมียมและสิ่งของสิ้นเปลืองมีให้ผ่านการซื้อในแอป</li><li>การสมัครสมาชิกจะต่ออายุอัตโนมัติเว้นแต่ยกเลิกล่วงหน้าอย่างน้อย 24 ชั่วโมงก่อนวันต่ออายุ</li><li>การคืนเงินสำหรับการซื้อในแอปเป็นไปตามนโยบาย App Store / Google Play</li></ul>' },
+          { heading: '9. ข้อจำกัดความรับผิดชอบ', content: '<p>MeetOverMeal เป็นแพลตฟอร์มที่อำนวยความสะดวกในการเชื่อมต่อทางสังคม เราไม่รับผิดชอบต่อพฤติกรรมของผู้ใช้แต่ละคน กรุณาใช้วิจารณญาณส่วนตัวและระมัดระวังเสมอเมื่อพบปะกับผู้คน</p>' },
+          { heading: '10. การจำกัดความรับผิด', content: '<p>ในขอบเขตสูงสุดที่กฎหมายอนุญาต MeetOverMeal จะไม่รับผิดชอบต่อความเสียหายทางอ้อม โดยบังเอิญ หรือที่เป็นผลสืบเนื่องจากการใช้แอป</p>' },
+          { heading: '11. การเปลี่ยนแปลงข้อกำหนด', content: '<p>เราขอสงวนสิทธิ์ในการแก้ไขข้อกำหนดเหล่านี้ได้ตลอดเวลา การใช้แอปต่อหลังจากมีการเปลี่ยนแปลงถือว่ายอมรับข้อกำหนดที่อัปเดต</p>' },
+          { heading: '12. ติดต่อเรา', content: '<p>สำหรับคำถามเกี่ยวกับข้อกำหนดการใช้งาน ติดต่อเราที่ <a href="mailto:feedback@meetovermeal.org">feedback@meetovermeal.org</a></p>' },
+        ],
+      },
+      vi: {
+        back: '← Quay lại trang chủ',
+        title: 'Điều khoản Dịch vụ',
+        updated: 'Cập nhật lần cuối: 4 tháng 4, 2026',
+        sections: [
+          { heading: '1. Chấp nhận Điều khoản', content: '<p>Bằng việc tạo tài khoản hoặc sử dụng MeetOverMeal ("Ứng dụng"), bạn đồng ý bị ràng buộc bởi các Điều khoản Dịch vụ này. Nếu bạn không đồng ý, vui lòng không sử dụng Ứng dụng.</p>' },
+          { heading: '2. Điều kiện sử dụng', content: '<p>Bạn phải ít nhất 18 tuổi để sử dụng MeetOverMeal. Bằng việc sử dụng Ứng dụng, bạn tuyên bố và đảm bảo rằng bạn đáp ứng yêu cầu về độ tuổi này.</p>' },
+          { heading: '3. Tài khoản Người dùng', content: '<ul><li>Bạn có trách nhiệm duy trì bảo mật thông tin đăng nhập.</li><li>Bạn phải cung cấp thông tin hồ sơ chính xác và đầy đủ.</li><li>Bạn không được tạo tài khoản cho người khác hoặc chuyển nhượng tài khoản.</li><li>Bạn có thể xóa tài khoản bất cứ lúc nào qua Cài đặt Hồ sơ.</li></ul>' },
+          { heading: '4. Hệ thống Gặp mặt & Đặt cọc', content: '<ul><li><strong>Đặt cọc:</strong> Khi bạn đăng ký tham gia hoặc tổ chức buổi gặp, khoản đặt cọc $5 USD sẽ được tạm giữ qua Stripe.</li><li><strong>Gặp mặt thành công:</strong> Nếu cả hai bên check-in tại nhà hàng, tiền đặt cọc sẽ được hoàn trả đầy đủ.</li><li><strong>Vắng mặt:</strong> Nếu bạn không check-in trong thời gian quy định, tiền đặt cọc sẽ bị tịch thu để bồi thường cho bên còn lại.</li><li><strong>Hủy:</strong> Hủy miễn phí trước khi ghép đôi. Phí phạt $3 áp dụng sau khi xác nhận ghép đôi.</li></ul>' },
+          { heading: '5. Quy tắc Cộng đồng', content: '<p>Bạn đồng ý KHÔNG:</p><ul><li>Đăng nội dung khiêu dâm, bạo lực, đe dọa hoặc lạm dụng</li><li>Quấy rối, bắt nạt hoặc đe dọa người dùng khác</li><li>Tạo hồ sơ giả hoặc gây hiểu lầm</li><li>Sử dụng Ứng dụng cho mục đích bất hợp pháp</li><li>Gửi thư rác hoặc tin nhắn thương mại không mong muốn</li><li>Cố gắng lách hệ thống đặt cọc</li></ul><p>Vi phạm có thể dẫn đến đình chỉ tài khoản ngay lập tức hoặc cấm thiết bị vĩnh viễn. Chúng tôi vận hành hệ thống báo cáo và xem xét 24 giờ.</p>' },
+          { heading: '6. Quyền sở hữu Nội dung', content: '<p>Bạn giữ quyền sở hữu nội dung mà bạn đăng (ảnh, tin nhắn, tuyên bố). Bằng việc đăng nội dung, bạn cấp cho MeetOverMeal giấy phép không độc quyền, miễn phí bản quyền để hiển thị trong Ứng dụng nhằm mục đích cung cấp dịch vụ.</p>' },
+          { heading: '7. Chặn & Báo cáo', content: '<p>Bạn có thể chặn hoặc báo cáo bất kỳ người dùng nào bất cứ lúc nào. Chặn người dùng trong buổi gặp đang hoạt động có thể dẫn đến phí phạt hủy như mô tả trong Mục 4.</p>' },
+          { heading: '8. Đăng ký & Mua hàng', content: '<ul><li>Gói thành viên cao cấp và vật phẩm tiêu hao có sẵn thông qua mua hàng trong ứng dụng.</li><li>Đăng ký tự động gia hạn trừ khi hủy trước ít nhất 24 giờ trước ngày gia hạn.</li><li>Hoàn tiền cho mua hàng trong ứng dụng tuân theo chính sách của App Store / Google Play.</li></ul>' },
+          { heading: '9. Tuyên bố Miễn trừ', content: '<p>MeetOverMeal là nền tảng tạo điều kiện kết nối xã hội. Chúng tôi không chịu trách nhiệm về hành vi của từng người dùng. Hãy luôn sử dụng phán đoán cá nhân và thận trọng khi gặp ai đó trực tiếp.</p>' },
+          { heading: '10. Giới hạn Trách nhiệm', content: '<p>Trong phạm vi tối đa được pháp luật cho phép, MeetOverMeal không chịu trách nhiệm cho bất kỳ thiệt hại gián tiếp, ngẫu nhiên hoặc hậu quả nào phát sinh từ việc bạn sử dụng Ứng dụng.</p>' },
+          { heading: '11. Thay đổi Điều khoản', content: '<p>Chúng tôi có quyền sửa đổi các Điều khoản này bất cứ lúc nào. Việc tiếp tục sử dụng Ứng dụng sau khi thay đổi đồng nghĩa với việc chấp nhận các Điều khoản cập nhật.</p>' },
+          { heading: '12. Liên hệ', content: '<p>Mọi thắc mắc về Điều khoản Dịch vụ này, hãy liên hệ <a href="mailto:feedback@meetovermeal.org">feedback@meetovermeal.org</a>.</p>' },
+        ],
+      },
+      id: {
+        back: '← Kembali ke Beranda',
+        title: 'Syarat Layanan',
+        updated: 'Terakhir diperbarui: 4 April 2026',
+        sections: [
+          { heading: '1. Penerimaan Syarat', content: '<p>Dengan membuat akun atau menggunakan MeetOverMeal ("Aplikasi"), Anda setuju untuk terikat oleh Syarat Layanan ini. Jika Anda tidak setuju, jangan gunakan Aplikasi.</p>' },
+          { heading: '2. Kelayakan', content: '<p>Anda harus berusia minimal 18 tahun untuk menggunakan MeetOverMeal. Dengan menggunakan Aplikasi, Anda menyatakan dan menjamin bahwa Anda memenuhi persyaratan usia ini.</p>' },
+          { heading: '3. Akun Pengguna', content: '<ul><li>Anda bertanggung jawab untuk menjaga keamanan kredensial akun Anda.</li><li>Anda harus memberikan informasi profil yang akurat dan lengkap.</li><li>Anda tidak boleh membuat akun untuk orang lain atau mentransfer akun Anda.</li><li>Anda dapat menghapus akun kapan saja melalui pengaturan Profil.</li></ul>' },
+          { heading: '4. Sistem Pertemuan & Deposit', content: '<ul><li><strong>Deposit:</strong> Saat mendaftar untuk bergabung atau mengadakan pertemuan, deposit $5 USD dibekukan sementara melalui Stripe.</li><li><strong>Pertemuan berhasil:</strong> Jika kedua pihak check-in di restoran, deposit dikembalikan sepenuhnya.</li><li><strong>Tidak hadir:</strong> Jika Anda gagal check-in dalam jendela waktu yang ditentukan, deposit Anda disita untuk mengompensasi pihak lain.</li><li><strong>Pembatalan:</strong> Pembatalan gratis sebelum pencocokan. Denda $3 berlaku setelah pencocokan dikonfirmasi.</li></ul>' },
+          { heading: '5. Pedoman Komunitas', content: '<p>Anda setuju untuk TIDAK:</p><ul><li>Memposting konten pornografi, kekerasan, ancaman, atau pelecehan</li><li>Melecehkan, menindas, atau mengintimidasi pengguna lain</li><li>Membuat profil palsu atau menyesatkan</li><li>Menggunakan Aplikasi untuk tujuan ilegal</li><li>Mengirim spam atau pesan komersial yang tidak diminta</li><li>Mencoba mengelak dari sistem deposit</li></ul><p>Pelanggaran dapat mengakibatkan penangguhan akun segera atau pemblokiran perangkat permanen. Kami mengoperasikan sistem pelaporan dan peninjauan 24 jam.</p>' },
+          { heading: '6. Kepemilikan Konten', content: '<p>Anda mempertahankan kepemilikan konten yang Anda posting (foto, pesan, deklarasi). Dengan memposting konten, Anda memberikan MeetOverMeal lisensi non-eksklusif dan bebas royalti untuk menampilkannya dalam Aplikasi guna menyediakan layanan.</p>' },
+          { heading: '7. Pemblokiran & Pelaporan', content: '<p>Anda dapat memblokir atau melaporkan pengguna mana pun kapan saja. Memblokir pengguna selama pertemuan aktif dapat mengakibatkan denda pembatalan seperti yang dijelaskan di Bagian 4.</p>' },
+          { heading: '8. Langganan & Pembelian', content: '<ul><li>Keanggotaan premium dan item habis pakai tersedia melalui pembelian dalam aplikasi.</li><li>Langganan diperpanjang otomatis kecuali dibatalkan setidaknya 24 jam sebelum tanggal perpanjangan.</li><li>Pengembalian dana untuk pembelian dalam aplikasi tunduk pada kebijakan App Store / Google Play.</li></ul>' },
+          { heading: '9. Penafian', content: '<p>MeetOverMeal adalah platform yang memfasilitasi koneksi sosial. Kami tidak bertanggung jawab atas perilaku pengguna individu. Selalu gunakan penilaian pribadi dan kehati-hatian saat bertemu seseorang secara langsung.</p>' },
+          { heading: '10. Batasan Tanggung Jawab', content: '<p>Sejauh diizinkan oleh hukum, MeetOverMeal tidak bertanggung jawab atas kerusakan tidak langsung, insidental, atau konsekuensial yang timbul dari penggunaan Aplikasi.</p>' },
+          { heading: '11. Perubahan Syarat', content: '<p>Kami berhak mengubah Syarat ini kapan saja. Penggunaan Aplikasi yang berkelanjutan setelah perubahan merupakan penerimaan Syarat yang diperbarui.</p>' },
+          { heading: '12. Kontak', content: '<p>Untuk pertanyaan tentang Syarat Layanan ini, hubungi kami di <a href="mailto:feedback@meetovermeal.org">feedback@meetovermeal.org</a>.</p>' },
+        ],
+      },
+      it: {
+        back: '← Torna alla Home',
+        title: 'Termini di Servizio',
+        updated: 'Ultimo aggiornamento: 4 aprile 2026',
+        sections: [
+          { heading: '1. Accettazione dei Termini', content: '<p>Creando un account o utilizzando MeetOverMeal ("l\'App"), accetti di essere vincolato da questi Termini di Servizio. Se non sei d\'accordo, non utilizzare l\'App.</p>' },
+          { heading: '2. Idoneità', content: '<p>Devi avere almeno 18 anni per utilizzare MeetOverMeal. Utilizzando l\'App, dichiari e garantisci di soddisfare questo requisito di età.</p>' },
+          { heading: '3. Account Utente', content: '<ul><li>Sei responsabile del mantenimento della sicurezza delle tue credenziali.</li><li>Devi fornire informazioni del profilo accurate e complete.</li><li>Non puoi creare account per altri o trasferire il tuo account.</li><li>Puoi eliminare il tuo account in qualsiasi momento dalle Impostazioni del profilo.</li></ul>' },
+          { heading: '4. Sistema Incontri e Depositi', content: '<ul><li><strong>Depositi:</strong> Quando ti candidi o organizzi un incontro, un deposito di $5 USD viene temporaneamente congelato tramite Stripe.</li><li><strong>Incontro riuscito:</strong> Se entrambe le parti effettuano il check-in al ristorante, i depositi vengono interamente rimborsati.</li><li><strong>Assenza:</strong> Se non effettui il check-in entro i termini previsti, il tuo deposito viene confiscato per compensare l\'altra parte.</li><li><strong>Cancellazione:</strong> Cancellazione gratuita prima del match. Dopo la conferma del match si applica una penalità di $3.</li></ul>' },
+          { heading: '5. Linee Guida della Community', content: '<p>Accetti di NON:</p><ul><li>Pubblicare contenuti pornografici, violenti, minacciosi o offensivi</li><li>Molestare, fare bullismo o intimidire altri utenti</li><li>Creare profili falsi o fuorvianti</li><li>Utilizzare l\'App per scopi illegali</li><li>Inviare spam o messaggi commerciali non richiesti</li><li>Tentare di aggirare il sistema di deposito</li></ul><p>Le violazioni possono comportare la sospensione immediata dell\'account o il ban permanente del dispositivo. Operiamo un sistema di segnalazione e revisione 24 ore su 24.</p>' },
+          { heading: '6. Proprietà dei Contenuti', content: '<p>Mantieni la proprietà dei contenuti che pubblichi (foto, messaggi, dichiarazioni). Pubblicando contenuti, concedi a MeetOverMeal una licenza non esclusiva e royalty-free per visualizzarli nell\'App allo scopo di fornire il servizio.</p>' },
+          { heading: '7. Blocco e Segnalazione', content: '<p>Puoi bloccare o segnalare qualsiasi utente in qualsiasi momento. Bloccare un utente durante un incontro attivo può comportare una penalità di cancellazione come descritto nella Sezione 4.</p>' },
+          { heading: '8. Abbonamenti e Acquisti', content: '<ul><li>Abbonamenti premium e articoli consumabili sono disponibili tramite acquisti in-app.</li><li>Gli abbonamenti si rinnovano automaticamente a meno che non vengano cancellati almeno 24 ore prima della data di rinnovo.</li><li>I rimborsi per acquisti in-app sono soggetti alle politiche di App Store / Google Play.</li></ul>' },
+          { heading: '9. Disclaimer', content: '<p>MeetOverMeal è una piattaforma che facilita le connessioni sociali. Non siamo responsabili del comportamento dei singoli utenti. Esercita sempre giudizio personale e cautela quando incontri qualcuno di persona.</p>' },
+          { heading: '10. Limitazione di Responsabilità', content: '<p>Nella misura massima consentita dalla legge, MeetOverMeal non sarà responsabile per danni indiretti, incidentali o consequenziali derivanti dall\'uso dell\'App.</p>' },
+          { heading: '11. Modifiche ai Termini', content: '<p>Ci riserviamo il diritto di modificare questi Termini in qualsiasi momento. L\'uso continuato dell\'App dopo le modifiche costituisce accettazione dei Termini aggiornati.</p>' },
+          { heading: '12. Contatti', content: '<p>Per domande su questi Termini di Servizio, contattaci a <a href="mailto:feedback@meetovermeal.org">feedback@meetovermeal.org</a>.</p>' },
+        ],
+      },
+    };
 
-    <h2>2. Eligibility</h2>
-    <p>You must be at least 18 years old to use MeetOverMeal. By using the App, you represent and warrant that you meet this age requirement.</p>
+    function render() {
+      const params = new URLSearchParams(window.location.search);
+      const lang = params.get('lang') || navigator.language?.split('-')[0] || 'en';
+      const t = translations[lang] || translations.en;
 
-    <h2>3. User Accounts</h2>
-    <ul>
-      <li>You are responsible for maintaining the security of your account credentials.</li>
-      <li>You must provide accurate and complete profile information.</li>
-      <li>You may not create accounts for others or transfer your account.</li>
-      <li>You can delete your account at any time through the Profile settings.</li>
-    </ul>
+      document.documentElement.lang = lang;
+      document.title = t.title + ' — MeetOverMeal';
 
-    <h2>4. Meetup System & Deposits</h2>
-    <ul>
-      <li><strong>Deposits:</strong> When you apply to join or host a meetup, a $5 USD deposit is temporarily frozen via Stripe.</li>
-      <li><strong>Successful Meetup:</strong> If both parties check in at the restaurant, deposits are fully refunded.</li>
-      <li><strong>No-show:</strong> If you fail to check in within the designated window, your deposit is forfeited to compensate the other party.</li>
-      <li><strong>Cancellation:</strong> Free cancellation before a match. A $3 penalty applies after a match is confirmed.</li>
-    </ul>
+      let html = `<a href="/" class="back">${t.back}</a>`;
+      html += `<h1>${t.title}</h1>`;
+      html += `<p class="updated">${t.updated}</p>`;
+      t.sections.forEach(s => {
+        html += `<h2>${s.heading}</h2>${s.content}`;
+      });
 
-    <h2>5. Community Guidelines</h2>
-    <p>You agree NOT to:</p>
-    <ul>
-      <li>Post pornographic, violent, threatening, or abusive content</li>
-      <li>Harass, bully, or intimidate other users</li>
-      <li>Create fake or misleading profiles</li>
-      <li>Use the App for any illegal purpose</li>
-      <li>Spam or send unsolicited commercial messages</li>
-      <li>Attempt to circumvent the deposit system</li>
-    </ul>
-    <p>Violations may result in immediate account suspension or permanent device ban. We operate a 24-hour reporting and review system.</p>
+      document.getElementById('content').innerHTML = html;
 
-    <h2>6. Content Ownership</h2>
-    <p>You retain ownership of content you post (photos, messages, declarations). By posting content, you grant MeetOverMeal a non-exclusive, royalty-free license to display it within the App for the purpose of providing the service.</p>
+      // RTL support for Arabic
+      if (lang === 'ar') {
+        document.documentElement.dir = 'rtl';
+      }
+    }
 
-    <h2>7. Blocking & Reporting</h2>
-    <p>You can block or report any user at any time. Blocking a user during an active meetup may result in a cancellation penalty as described in Section 4.</p>
-
-    <h2>8. Subscriptions & Purchases</h2>
-    <ul>
-      <li>Premium memberships and consumable items are available through in-app purchases.</li>
-      <li>Subscriptions auto-renew unless cancelled at least 24 hours before the renewal date.</li>
-      <li>Refunds for in-app purchases are subject to App Store / Google Play policies.</li>
-    </ul>
-
-    <h2>9. Disclaimer</h2>
-    <p>MeetOverMeal is a platform that facilitates social connections. We are not responsible for the behavior of individual users. Always exercise personal judgment and caution when meeting someone in person.</p>
-
-    <h2>10. Limitation of Liability</h2>
-    <p>To the maximum extent permitted by law, MeetOverMeal shall not be liable for any indirect, incidental, or consequential damages arising from your use of the App.</p>
-
-    <h2>11. Changes to Terms</h2>
-    <p>We reserve the right to modify these Terms at any time. Continued use of the App after changes constitutes acceptance of the updated Terms.</p>
-
-    <h2>12. Contact</h2>
-    <p>For questions about these Terms of Service, contact us at <a href="mailto:feedback@meetovermeal.org">feedback@meetovermeal.org</a>.</p>
-  </div>
+    render();
+  </script>
 </body>
 </html>

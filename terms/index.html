@@ -15,7 +15,6 @@
     p, li { font-size: 15px; line-height: 1.7; color: #5D5040; margin-bottom: 12px; }
     ul { padding-left: 20px; }
     a { color: #F59E0B; }
-    .back { display: inline-block; margin-bottom: 24px; color: #F59E0B; text-decoration: none; font-weight: 600; font-size: 14px; }
   </style>
 </head>
 <body>
@@ -318,8 +317,7 @@
       document.documentElement.lang = lang;
       document.title = t.title + ' — MeetOverMeal';
 
-      let html = `<a href="/" class="back">${t.back}</a>`;
-      html += `<h1>${t.title}</h1>`;
+      let html = `<h1>${t.title}</h1>`;
       html += `<p class="updated">${t.updated}</p>`;
       t.sections.forEach(s => {
         html += `<h2>${s.heading}</h2>${s.content}`;

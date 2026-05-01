@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MeetOverMeal - Join this Meetup</title>
+  <meta name="description" content="Join a food meetup on MeetOverMeal — dine together, meet new people!">
+  <!-- Open Graph for WeChat, WhatsApp, etc. -->
+  <meta property="og:title" content="Come dine with me on MeetOverMeal!">
+  <meta property="og:description" content="A friend invited you to a meetup. Download MeetOverMeal to join!">
+  <meta property="og:image" content="https://meetovermeal.org/assets/share-card.png">
+  <meta property="og:url" content="https://meetovermeal.org/meetup">
+  <meta property="og:type" content="website">
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Come dine with me on MeetOverMeal!">
+  <meta name="twitter:description" content="A friend invited you to a meetup. Download MeetOverMeal to join!">
+  <meta name="twitter:image" content="https://meetovermeal.org/assets/share-card.png">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #FFF8F0 0%, #FFE4B5 50%, #FFD2A6 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .card {
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(20px);
+      border-radius: 28px;
+      padding: 48px 36px;
+      max-width: 380px;
+      width: 90%;
+      text-align: center;
+      box-shadow: 0 20px 60px rgba(139, 78, 0, 0.12);
+      border: 1px solid rgba(255, 210, 166, 0.4);
+    }
+    .logo {
+      font-size: 32px;
+      font-weight: 900;
+      color: #2D2016;
+      margin-bottom: 8px;
+    }
+    .logo span { color: #FF8C00; }
+    .subtitle {
+      font-size: 14px;
+      color: #8B7E6E;
+      margin-bottom: 32px;
+      font-weight: 600;
+    }
+    .spinner {
+      width: 48px;
+      height: 48px;
+      border: 4px solid #F0E8E0;
+      border-top: 4px solid #FF8C00;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 24px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .status {
+      font-size: 16px;
+      color: #2D2016;
+      font-weight: 700;
+      margin-bottom: 24px;
+    }
+    .download-btn {
+      display: inline-block;
+      background: #FF8C00;
+      color: #fff;
+      font-size: 16px;
+      font-weight: 800;
+      padding: 16px 40px;
+      border-radius: 16px;
+      text-decoration: none;
+      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 8px 24px rgba(255, 140, 0, 0.3);
+    }
+    .download-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 32px rgba(255, 140, 0, 0.4);
+    }
+    .hint {
+      font-size: 12px;
+      color: #A09080;
+      margin-top: 16px;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="logo">Meet<span>Over</span>Meal</div>
+    <div class="subtitle">Dine Together · Meet Over Meals</div>
+    <div class="spinner" id="spinner"></div>
+    <div class="status" id="status">Opening MeetOverMeal...</div>
+    <a class="download-btn" id="download-btn" href="https://apps.apple.com/us/app/meetovermeal/id6762139752" style="display:none;">
+      Download MeetOverMeal
+    </a>
+    <div class="hint" id="hint"></div>
+  </div>
+
+  <script>
+    (function() {
+      const APP_STORE_URL = 'https://apps.apple.com/us/app/meetovermeal/id6762139752';
+      const CUSTOM_SCHEME = 'meetovermeal://';
+
+      // Extract meetup ID from query string
+      const params = new URLSearchParams(window.location.search);
+      const meetupId = params.get('id');
+
+      if (meetupId) {
+        // Try to open the app via custom URL scheme
+        const deepLink = CUSTOM_SCHEME + 'meetup?id=' + encodeURIComponent(meetupId);
+        
+        // Set a timeout — if the app doesn't open in 2.5 seconds, show download button
+        const timer = setTimeout(function() {
+          document.getElementById('spinner').style.display = 'none';
+          document.getElementById('status').textContent = 'Don\'t have MeetOverMeal yet?';
+          document.getElementById('download-btn').style.display = 'inline-block';
+          document.getElementById('hint').textContent = 'Download the app and your meetup will open automatically.';
+        }, 2500);
+
+        // When page becomes hidden (app opened), clear the timer
+        document.addEventListener('visibilitychange', function() {
+          if (document.hidden) {
+            clearTimeout(timer);
+          }
+        });
+
+        // Attempt to open the deep link
+        window.location.href = deepLink;
+      } else {
+        // No meetup ID — just show download button
+        document.getElementById('spinner').style.display = 'none';
+        document.getElementById('status').textContent = 'Explore food meetups nearby!';
+        document.getElementById('download-btn').style.display = 'inline-block';
+        document.getElementById('hint').textContent = 'Available on the App Store.';
+      }
+    })();
+  </script>
+</body>
+</html>

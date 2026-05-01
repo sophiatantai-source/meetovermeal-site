@@ -1,0 +1,17 @@
+{
+  "applinks": {
+    "apps": [],
+    "details": [
+      {
+        "appIDs": [
+          "LZR448B9J4.com.meetovermeal.app"
+        ],
+        "components": [
+          {
+            "/": "/meetup*"
+          }
+        ]
+      }
+    ]
+  }
+}

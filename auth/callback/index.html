@@ -43,11 +43,6 @@
       50% { box-shadow: 0 0 0 16px rgba(245, 158, 11, 0); }
     }
 
-    @keyframes confetti {
-      0% { opacity: 1; transform: translateY(0) rotate(0deg); }
-      100% { opacity: 0; transform: translateY(-120px) rotate(360deg); }
-    }
-
     .success-icon {
       width: 100px;
       height: 100px;
@@ -58,7 +53,6 @@
       justify-content: center;
       margin: 0 auto 28px;
       animation: celebrate 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) forwards, pulse 2s ease-in-out 1s infinite;
-      position: relative;
     }
 
     .success-icon svg {
@@ -225,8 +219,8 @@
     </div>
 
     <p class="brand">MeetOverMeal</p>
-    <h1>🎉 <span>Email Confirmed!</span></h1>
-    <p class="subtitle">
+    <h1 id="heading">🎉 <span>Email Confirmed!</span></h1>
+    <p class="subtitle" id="subtitle">
       Your account has been verified successfully. You're all set to start connecting with people over great meals!
     </p>
 
@@ -235,18 +229,18 @@
     </a>
 
     <div class="next-steps">
-      <h3>Next Steps</h3>
+      <h3 id="nextStepsTitle">Next Steps</h3>
       <div class="step">
         <div class="step-num">1</div>
-        <p>Open the app and log in with your email and password</p>
+        <p id="step1">Open the app and log in with your email and password</p>
       </div>
       <div class="step">
         <div class="step-num">2</div>
-        <p>Complete your profile with a photo and a short bio</p>
+        <p id="step2">Complete your profile with a photo and a short bio</p>
       </div>
       <div class="step">
         <div class="step-num">3</div>
-        <p>Browse nearby restaurants and join your first meetup!</p>
+        <p id="step3">Browse nearby restaurants and join your first meetup!</p>
       </div>
     </div>
 
@@ -256,8 +250,8 @@
   </div>
 
   <script>
-    // Multi-language support
-    const translations = {
+    // All 15 languages supported by the app
+    var T = {
       zh: {
         title: '🎉 邮箱验证成功！',
         subtitle: '恭喜你！你的账号已成功验证。现在就可以开始在美食中认识新朋友了！',
@@ -299,38 +293,122 @@
         subtitle: 'Félicitations ! Votre compte a été vérifié. Commencez à rencontrer des gens autour de bons repas !',
         openApp: 'Ouvrir MeetOverMeal',
         nextSteps: 'Prochaines étapes',
-        step1: 'Ouvrez l\'app et connectez-vous avec votre email et mot de passe',
+        step1: "Ouvrez l'app et connectez-vous avec votre email et mot de passe",
         step2: 'Complétez votre profil avec une photo et une courte bio',
         step3: 'Explorez les restaurants proches et rejoignez votre premier repas !',
       },
+      de: {
+        title: '🎉 E-Mail bestätigt!',
+        subtitle: 'Herzlichen Glückwunsch! Dein Konto wurde erfolgreich verifiziert. Lerne jetzt neue Leute beim gemeinsamen Essen kennen!',
+        openApp: 'MeetOverMeal öffnen',
+        nextSteps: 'Nächste Schritte',
+        step1: 'Öffne die App und melde dich mit E-Mail und Passwort an',
+        step2: 'Vervollständige dein Profil mit einem Foto und einer kurzen Bio',
+        step3: 'Entdecke Restaurants in der Nähe und nimm an deinem ersten Treffen teil!',
+      },
+      pt: {
+        title: '🎉 Email Confirmado!',
+        subtitle: 'Parabéns! Sua conta foi verificada com sucesso. Comece a conhecer pessoas através de refeições incríveis!',
+        openApp: 'Abrir MeetOverMeal',
+        nextSteps: 'Próximos passos',
+        step1: 'Abra o app e faça login com seu email e senha',
+        step2: 'Complete seu perfil com uma foto e uma breve descrição',
+        step3: 'Explore restaurantes próximos e participe da sua primeira refeição!',
+      },
+      it: {
+        title: '🎉 Email Confermata!',
+        subtitle: 'Congratulazioni! Il tuo account è stato verificato. Inizia a conoscere persone condividendo ottimi pasti!',
+        openApp: 'Apri MeetOverMeal',
+        nextSteps: 'Prossimi passi',
+        step1: "Apri l'app e accedi con email e password",
+        step2: 'Completa il tuo profilo con una foto e una breve bio',
+        step3: 'Esplora i ristoranti vicini e partecipa al tuo primo incontro!',
+      },
+      ru: {
+        title: '🎉 Email подтверждён!',
+        subtitle: 'Поздравляем! Ваш аккаунт успешно подтверждён. Начинайте знакомиться с людьми за вкусными блюдами!',
+        openApp: 'Открыть MeetOverMeal',
+        nextSteps: 'Дальнейшие шаги',
+        step1: 'Откройте приложение и войдите с email и паролем',
+        step2: 'Заполните профиль: добавьте фото и описание',
+        step3: 'Найдите рестораны поблизости и присоединитесь к первой встрече!',
+      },
+      ar: {
+        title: '🎉 تم تأكيد البريد الإلكتروني!',
+        subtitle: 'تهانينا! تم التحقق من حسابك بنجاح. ابدأ بالتعرف على أشخاص جدد حول وجبات شهية!',
+        openApp: 'افتح MeetOverMeal',
+        nextSteps: 'الخطوات التالية',
+        step1: 'افتح التطبيق وسجل الدخول ببريدك وكلمة المرور',
+        step2: 'أكمل ملفك الشخصي بصورة ونبذة قصيرة',
+        step3: 'تصفح المطاعم القريبة وانضم لأول لقاء!',
+      },
+      hi: {
+        title: '🎉 ईमेल सत्यापित!',
+        subtitle: 'बधाई हो! आपका खाता सफलतापूर्वक सत्यापित हो गया है। अब स्वादिष्ट भोजन के साथ नए लोगों से मिलना शुरू करें!',
+        openApp: 'MeetOverMeal खोलें',
+        nextSteps: 'अगले कदम',
+        step1: 'ऐप खोलें और ईमेल और पासवर्ड से लॉगिन करें',
+        step2: 'फोटो और छोटा परिचय जोड़कर प्रोफ़ाइल पूरा करें',
+        step3: 'आस-पास के रेस्तरां खोजें और अपनी पहली मीटअप में शामिल हों!',
+      },
+      th: {
+        title: '🎉 ยืนยันอีเมลสำเร็จ!',
+        subtitle: 'ยินดีด้วย! บัญชีของคุณได้รับการยืนยันแล้ว เริ่มพบปะผู้คนใหม่ๆ ผ่านมื้ออาหารอร่อยๆ ได้เลย!',
+        openApp: 'เปิด MeetOverMeal',
+        nextSteps: 'ขั้นตอนถัดไป',
+        step1: 'เปิดแอปแล้วเข้าสู่ระบบด้วยอีเมลและรหัสผ่าน',
+        step2: 'เติมโปรไฟล์ด้วยรูปภาพและคำแนะนำตัวสั้นๆ',
+        step3: 'ค้นหาร้านอาหารใกล้เคียงและเข้าร่วมนัดพบครั้งแรก!',
+      },
+      vi: {
+        title: '🎉 Xác nhận email thành công!',
+        subtitle: 'Chúc mừng! Tài khoản của bạn đã được xác minh. Bắt đầu kết nối với mọi người qua những bữa ăn tuyệt vời!',
+        openApp: 'Mở MeetOverMeal',
+        nextSteps: 'Bước tiếp theo',
+        step1: 'Mở ứng dụng và đăng nhập bằng email và mật khẩu',
+        step2: 'Hoàn thiện hồ sơ với ảnh và giới thiệu ngắn',
+        step3: 'Khám phá nhà hàng gần bạn và tham gia buổi gặp mặt đầu tiên!',
+      },
+      id: {
+        title: '🎉 Email Terverifikasi!',
+        subtitle: 'Selamat! Akun kamu sudah berhasil diverifikasi. Mulai berkenalan dengan orang baru lewat makan bareng!',
+        openApp: 'Buka MeetOverMeal',
+        nextSteps: 'Langkah selanjutnya',
+        step1: 'Buka aplikasi dan login dengan email dan kata sandi',
+        step2: 'Lengkapi profil dengan foto dan bio singkat',
+        step3: 'Cari restoran terdekat dan ikuti makan bareng pertamamu!',
+      },
     };
 
-    // Detect browser language
-    function getLanguage() {
-      const lang = (navigator.language || navigator.userLanguage || 'en').substring(0, 2).toLowerCase();
-      return translations[lang] ? lang : null;
+    // 1. URL parameter from app (highest priority — matches phone system language)
+    // 2. Browser language (fallback)
+    function getLang() {
+      var params = new URLSearchParams(window.location.search);
+      var urlLang = (params.get('lang') || '').substring(0, 2).toLowerCase();
+      if (urlLang && T[urlLang]) return urlLang;
+      var browserLang = (navigator.language || navigator.userLanguage || '').substring(0, 2).toLowerCase();
+      if (browserLang && T[browserLang]) return browserLang;
+      return null; // use default English
     }
 
-    // Apply translations
-    const lang = getLanguage();
-    if (lang && translations[lang]) {
-      const t = translations[lang];
-      document.querySelector('h1').innerHTML = t.title;
-      document.querySelector('.subtitle').textContent = t.subtitle;
-      document.querySelector('#openAppBtn').textContent = t.openApp;
-      document.querySelector('.next-steps h3').textContent = t.nextSteps;
-      const steps = document.querySelectorAll('.step p');
-      steps[0].textContent = t.step1;
-      steps[1].textContent = t.step2;
-      steps[2].textContent = t.step3;
+    var lang = getLang();
+    if (lang) {
+      var t = T[lang];
+      document.getElementById('heading').innerHTML = t.title;
+      document.getElementById('subtitle').textContent = t.subtitle;
+      document.getElementById('openAppBtn').textContent = t.openApp;
+      document.getElementById('nextStepsTitle').textContent = t.nextSteps;
+      document.getElementById('step1').textContent = t.step1;
+      document.getElementById('step2').textContent = t.step2;
+      document.getElementById('step3').textContent = t.step3;
     }
 
     // Confetti effect
     function createConfetti() {
-      const container = document.getElementById('confetti');
-      const colors = ['#F59E0B', '#F97316', '#EF4444', '#10B981', '#3B82F6', '#8B5CF6', '#EC4899'];
-      for (let i = 0; i < 60; i++) {
-        const piece = document.createElement('div');
+      var container = document.getElementById('confetti');
+      var colors = ['#F59E0B', '#F97316', '#EF4444', '#10B981', '#3B82F6', '#8B5CF6', '#EC4899'];
+      for (var i = 0; i < 60; i++) {
+        var piece = document.createElement('div');
         piece.classList.add('confetti-piece');
         piece.style.left = Math.random() * 100 + '%';
         piece.style.top = -10 + 'px';
@@ -341,15 +419,13 @@
         piece.style.animationDuration = (Math.random() * 2 + 2) + 's';
         container.appendChild(piece);
       }
-      // Clean up confetti after animation
-      setTimeout(() => { container.innerHTML = ''; }, 5000);
+      setTimeout(function() { container.innerHTML = ''; }, 5000);
     }
 
     createConfetti();
 
     // Auto-redirect: try to open the app after a short delay
     setTimeout(function() {
-      // Pass current URL hash to the app scheme so tokens are forwarded
       var hash = window.location.hash;
       window.location.href = 'meetovermeal://' + (hash || '');
     }, 1500);

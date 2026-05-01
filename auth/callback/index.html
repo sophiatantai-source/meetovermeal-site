@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Email Confirmed — MeetOverMeal</title>
+  <meta name="description" content="Your email has been confirmed. Welcome to MeetOverMeal!">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      color: #2C241B;
+      background: #FAF7F2;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .container {
+      text-align: center;
+      padding: 40px 24px;
+      max-width: 480px;
+      animation: fadeUp 0.6s ease-out;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes celebrate {
+      0% { transform: scale(0.6) rotate(-8deg); opacity: 0; }
+      50% { transform: scale(1.1) rotate(4deg); }
+      100% { transform: scale(1) rotate(0deg); opacity: 1; }
+    }
+
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.3); }
+      50% { box-shadow: 0 0 0 16px rgba(245, 158, 11, 0); }
+    }
+
+    @keyframes confetti {
+      0% { opacity: 1; transform: translateY(0) rotate(0deg); }
+      100% { opacity: 0; transform: translateY(-120px) rotate(360deg); }
+    }
+
+    .success-icon {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #F59E0B, #F97316);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 28px;
+      animation: celebrate 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) forwards, pulse 2s ease-in-out 1s infinite;
+      position: relative;
+    }
+
+    .success-icon svg {
+      width: 48px;
+      height: 48px;
+      color: #fff;
+    }
+
+    .confetti-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 10;
+    }
+
+    .confetti-piece {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      border-radius: 2px;
+      animation: confettiFall 3s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+    }
+
+    @keyframes confettiFall {
+      0% { opacity: 1; transform: translateY(-20px) rotate(0deg) scale(1); }
+      100% { opacity: 0; transform: translateY(100vh) rotate(720deg) scale(0.5); }
+    }
+
+    .brand {
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: #C4B8AC;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+
+    h1 {
+      font-size: 28px;
+      font-weight: 900;
+      letter-spacing: -0.5px;
+      color: #2C241B;
+      margin-bottom: 12px;
+      line-height: 1.2;
+    }
+
+    h1 span { color: #F59E0B; }
+
+    .subtitle {
+      font-size: 16px;
+      color: #8B7E6E;
+      line-height: 1.6;
+      margin-bottom: 32px;
+    }
+
+    .open-app-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: linear-gradient(135deg, #F59E0B, #F97316);
+      color: #fff;
+      font-size: 16px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      padding: 16px 40px;
+      border-radius: 16px;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 8px 24px rgba(245, 158, 11, 0.3);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .open-app-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 32px rgba(245, 158, 11, 0.4);
+    }
+
+    .open-app-btn:active {
+      transform: translateY(0);
+    }
+
+    .next-steps {
+      margin-top: 40px;
+      background: #fff;
+      border-radius: 20px;
+      padding: 24px;
+      border: 1px solid #F0E8E0;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.04);
+      text-align: left;
+    }
+
+    .next-steps h3 {
+      font-size: 15px;
+      font-weight: 700;
+      margin-bottom: 16px;
+      color: #2C241B;
+    }
+
+    .step {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .step:last-child { margin-bottom: 0; }
+
+    .step-num {
+      width: 24px;
+      height: 24px;
+      border-radius: 12px;
+      background: #FEF3C7;
+      color: #F59E0B;
+      font-size: 12px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .step p {
+      font-size: 14px;
+      color: #8B7E6E;
+      line-height: 1.5;
+    }
+
+    .footer {
+      margin-top: 40px;
+      font-size: 13px;
+      color: #C4B8AC;
+    }
+
+    .footer a {
+      color: #F59E0B;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .footer a:hover { text-decoration: underline; }
+
+    @media (max-width: 640px) {
+      h1 { font-size: 24px; }
+      .success-icon { width: 80px; height: 80px; }
+      .success-icon svg { width: 40px; height: 40px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="confetti-container" id="confetti"></div>
+
+  <div class="container">
+    <div class="success-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="20 6 9 17 4 12"></polyline>
+      </svg>
+    </div>
+
+    <p class="brand">MeetOverMeal</p>
+    <h1>🎉 <span>Email Confirmed!</span></h1>
+    <p class="subtitle">
+      Your account has been verified successfully. You're all set to start connecting with people over great meals!
+    </p>
+
+    <a href="meetovermeal://" class="open-app-btn" id="openAppBtn">
+      Open MeetOverMeal App
+    </a>
+
+    <div class="next-steps">
+      <h3>Next Steps</h3>
+      <div class="step">
+        <div class="step-num">1</div>
+        <p>Open the app and log in with your email and password</p>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <p>Complete your profile with a photo and a short bio</p>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <p>Browse nearby restaurants and join your first meetup!</p>
+      </div>
+    </div>
+
+    <div class="footer">
+      <p>&copy; 2026 MeetOverMeal &middot; <a href="/">Home</a> &middot; <a href="/privacy">Privacy</a> &middot; <a href="/terms">Terms</a></p>
+    </div>
+  </div>
+
+  <script>
+    // Multi-language support
+    const translations = {
+      zh: {
+        title: '🎉 邮箱验证成功！',
+        subtitle: '恭喜你！你的账号已成功验证。现在就可以开始在美食中认识新朋友了！',
+        openApp: '打开 MeetOverMeal',
+        nextSteps: '接下来',
+        step1: '打开 App，使用你的邮箱和密码登录',
+        step2: '完善你的个人资料，添加照片和自我介绍',
+        step3: '浏览附近的餐厅，加入你的第一次约饭吧！',
+      },
+      ja: {
+        title: '🎉 メール認証完了！',
+        subtitle: 'おめでとうございます！アカウントの認証が完了しました。さっそく食事を通じて新しい出会いを始めましょう！',
+        openApp: 'MeetOverMealを開く',
+        nextSteps: '次のステップ',
+        step1: 'アプリを開き、メールとパスワードでログイン',
+        step2: '写真と自己紹介でプロフィールを完成させましょう',
+        step3: '近くのレストランを探して、最初の食事会に参加しよう！',
+      },
+      ko: {
+        title: '🎉 이메일 인증 완료!',
+        subtitle: '축하합니다! 계정이 성공적으로 인증되었습니다. 맛있는 식사와 함께 새로운 인연을 시작해보세요!',
+        openApp: 'MeetOverMeal 열기',
+        nextSteps: '다음 단계',
+        step1: '앱을 열고 이메일과 비밀번호로 로그인하세요',
+        step2: '사진과 자기소개로 프로필을 완성하세요',
+        step3: '근처 레스토랑을 둘러보고 첫 식사 모임에 참여하세요!',
+      },
+      es: {
+        title: '🎉 ¡Email Confirmado!',
+        subtitle: '¡Felicidades! Tu cuenta ha sido verificada. ¡Empieza a conectar con gente a través de deliciosas comidas!',
+        openApp: 'Abrir MeetOverMeal',
+        nextSteps: 'Próximos pasos',
+        step1: 'Abre la app e inicia sesión con tu email y contraseña',
+        step2: 'Completa tu perfil con una foto y una breve descripción',
+        step3: '¡Explora restaurantes cercanos y únete a tu primera comida!',
+      },
+      fr: {
+        title: '🎉 Email Confirmé !',
+        subtitle: 'Félicitations ! Votre compte a été vérifié. Commencez à rencontrer des gens autour de bons repas !',
+        openApp: 'Ouvrir MeetOverMeal',
+        nextSteps: 'Prochaines étapes',
+        step1: 'Ouvrez l\'app et connectez-vous avec votre email et mot de passe',
+        step2: 'Complétez votre profil avec une photo et une courte bio',
+        step3: 'Explorez les restaurants proches et rejoignez votre premier repas !',
+      },
+    };
+
+    // Detect browser language
+    function getLanguage() {
+      const lang = (navigator.language || navigator.userLanguage || 'en').substring(0, 2).toLowerCase();
+      return translations[lang] ? lang : null;
+    }
+
+    // Apply translations
+    const lang = getLanguage();
+    if (lang && translations[lang]) {
+      const t = translations[lang];
+      document.querySelector('h1').innerHTML = t.title;
+      document.querySelector('.subtitle').textContent = t.subtitle;
+      document.querySelector('#openAppBtn').textContent = t.openApp;
+      document.querySelector('.next-steps h3').textContent = t.nextSteps;
+      const steps = document.querySelectorAll('.step p');
+      steps[0].textContent = t.step1;
+      steps[1].textContent = t.step2;
+      steps[2].textContent = t.step3;
+    }
+
+    // Confetti effect
+    function createConfetti() {
+      const container = document.getElementById('confetti');
+      const colors = ['#F59E0B', '#F97316', '#EF4444', '#10B981', '#3B82F6', '#8B5CF6', '#EC4899'];
+      for (let i = 0; i < 60; i++) {
+        const piece = document.createElement('div');
+        piece.classList.add('confetti-piece');
+        piece.style.left = Math.random() * 100 + '%';
+        piece.style.top = -10 + 'px';
+        piece.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        piece.style.width = (Math.random() * 8 + 4) + 'px';
+        piece.style.height = (Math.random() * 8 + 4) + 'px';
+        piece.style.animationDelay = (Math.random() * 1) + 's';
+        piece.style.animationDuration = (Math.random() * 2 + 2) + 's';
+        container.appendChild(piece);
+      }
+      // Clean up confetti after animation
+      setTimeout(() => { container.innerHTML = ''; }, 5000);
+    }
+
+    createConfetti();
+
+    // Auto-redirect: try to open the app after a short delay
+    setTimeout(function() {
+      // Pass current URL hash to the app scheme so tokens are forwarded
+      var hash = window.location.hash;
+      window.location.href = 'meetovermeal://' + (hash || '');
+    }, 1500);
+  </script>
+</body>
+</html>

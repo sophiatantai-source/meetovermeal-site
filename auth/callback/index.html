@@ -424,11 +424,9 @@
 
     createConfetti();
 
-    // Auto-redirect: try to open the app after a short delay
-    setTimeout(function() {
-      var hash = window.location.hash;
-      window.location.href = 'meetovermeal://' + (hash || '');
-    }, 1500);
+    // NOTE: Do NOT auto-redirect via window.location.href to meetovermeal://
+    // On iOS, this navigates the page away, leaving a blank screen in Safari.
+    // Instead, users tap the "Open App" button (anchor tag) which works correctly.
   </script>
 </body>
 </html>

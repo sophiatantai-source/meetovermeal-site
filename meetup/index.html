@@ -6,100 +6,218 @@
   <title>MeetOverMeal - Join this Meetup</title>
   <meta name="description" content="Join a food meetup on MeetOverMeal — dine together, meet new people!">
   <!-- Open Graph for WeChat, WhatsApp, etc. -->
-  <meta property="og:title" content="Come dine with me on MeetOverMeal!">
-  <meta property="og:description" content="A friend invited you to a meetup. Download MeetOverMeal to join!">
-  <meta property="og:image" content="https://meetovermeal.org/assets/share-card.png">
+  <meta property="og:title" content="You're Invited · MeetOverMeal">
+  <meta property="og:description" content="Join an exclusive culinary experience. Tap to view meetup details and secure your seat at the table.">
+  <meta property="og:image" content="https://meetovermeal.org/meetup/share-card.png">
   <meta property="og:url" content="https://meetovermeal.org/meetup">
   <meta property="og:type" content="website">
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Come dine with me on MeetOverMeal!">
-  <meta name="twitter:description" content="A friend invited you to a meetup. Download MeetOverMeal to join!">
-  <meta name="twitter:image" content="https://meetovermeal.org/assets/share-card.png">
+  <meta name="twitter:title" content="You're Invited · MeetOverMeal">
+  <meta name="twitter:description" content="Join an exclusive culinary experience. Tap to view meetup details and secure your seat at the table.">
+  <meta name="twitter:image" content="https://meetovermeal.org/meetup/share-card.png">
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,700;1,500&display=swap" rel="stylesheet">
+  
   <style>
+    :root {
+      --bg: #F7F5F0;
+      --card-bg: #FFFFFF;
+      --text-dark: #1C1917;
+      --text-muted: #78716C;
+      --accent: #E85D04;
+      --accent-hover: #DC2F02;
+    }
+    
     * { margin: 0; padding: 0; box-sizing: border-box; }
+    
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      background: linear-gradient(135deg, #FFF8F0 0%, #FFE4B5 50%, #FFD2A6 100%);
+      font-family: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--bg);
+      /* Subtle radiant gradients to add depth without clutter */
+      background-image: 
+        radial-gradient(circle at 15% 0%, rgba(232, 93, 4, 0.04) 0%, transparent 40%),
+        radial-gradient(circle at 85% 100%, rgba(232, 93, 4, 0.06) 0%, transparent 40%);
       min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
+      color: var(--text-dark);
+      position: relative;
+      overflow: hidden;
+      -webkit-font-smoothing: antialiased;
     }
+    
+    /* Premium noise texture overlay */
+    body::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      opacity: 0.35;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+    }
+
     .card {
-      background: rgba(255, 255, 255, 0.92);
-      backdrop-filter: blur(20px);
+      position: relative;
+      background: var(--card-bg);
       border-radius: 28px;
-      padding: 48px 36px;
-      max-width: 380px;
+      padding: 56px 48px;
+      max-width: 440px;
       width: 90%;
       text-align: center;
-      box-shadow: 0 20px 60px rgba(139, 78, 0, 0.12);
-      border: 1px solid rgba(255, 210, 166, 0.4);
+      box-shadow: 0 32px 80px -16px rgba(28, 25, 23, 0.08), 
+                  0 0 0 1px rgba(28, 25, 23, 0.04);
+      z-index: 1;
+      animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      opacity: 0;
+      transform: translateY(24px);
     }
-    .logo {
-      font-size: 32px;
-      font-weight: 900;
-      color: #2D2016;
-      margin-bottom: 8px;
+    
+    @keyframes fadeUp {
+      to { opacity: 1; transform: translateY(0); }
     }
-    .logo span { color: #FF8C00; }
-    .subtitle {
-      font-size: 14px;
-      color: #8B7E6E;
+
+    .graphic-container {
       margin-bottom: 32px;
+      position: relative;
+      display: inline-block;
+    }
+
+    .graphic {
+      width: 72px;
+      height: 72px;
+      background: #FFF8F3;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      box-shadow: inset 0 2px 12px rgba(232, 93, 4, 0.05),
+                  0 8px 24px -6px rgba(232, 93, 4, 0.15);
+      position: relative;
+      z-index: 2;
+    }
+
+    .graphic-ring {
+      position: absolute;
+      inset: -12px;
+      border-radius: 50%;
+      border: 1px dashed rgba(232, 93, 4, 0.2);
+      animation: spin-slow 15s linear infinite;
+      z-index: 1;
+    }
+    
+    @keyframes spin-slow {
+      to { transform: rotate(360deg); }
+    }
+
+    .logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 42px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      color: var(--text-dark);
+      margin-bottom: 12px;
+      line-height: 1.1;
+    }
+    
+    .logo span { 
+      color: var(--accent); 
+      font-style: italic;
+    }
+    
+    .subtitle {
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      color: var(--text-muted);
+      margin-bottom: 48px;
       font-weight: 600;
     }
-    .spinner {
-      width: 48px;
-      height: 48px;
-      border: 4px solid #F0E8E0;
-      border-top: 4px solid #FF8C00;
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-      margin: 0 auto 24px;
+
+    .status-container {
+      min-height: 130px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
     }
-    @keyframes spin { to { transform: rotate(360deg); } }
-    .status {
-      font-size: 16px;
-      color: #2D2016;
-      font-weight: 700;
+
+    .spinner {
+      width: 36px;
+      height: 36px;
+      border: 3px solid rgba(232, 93, 4, 0.1);
+      border-top: 3px solid var(--accent);
+      border-radius: 50%;
+      animation: spin 0.8s cubic-bezier(0.4, 0, 0.2, 1) infinite;
       margin-bottom: 24px;
     }
+    
+    @keyframes spin { 
+      to { transform: rotate(360deg); } 
+    }
+    
+    .status {
+      font-size: 18px;
+      color: var(--text-dark);
+      font-weight: 400;
+      line-height: 1.5;
+    }
+
     .download-btn {
-      display: inline-block;
-      background: #FF8C00;
-      color: #fff;
+      display: none;
+      background: var(--text-dark);
+      color: #FFF;
       font-size: 16px;
-      font-weight: 800;
-      padding: 16px 40px;
-      border-radius: 16px;
+      font-weight: 500;
+      padding: 18px 48px;
+      border-radius: 100px;
       text-decoration: none;
-      transition: transform 0.2s, box-shadow 0.2s;
-      box-shadow: 0 8px 24px rgba(255, 140, 0, 0.3);
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      margin-top: 12px;
+      border: 1px solid transparent;
+      box-shadow: 0 4px 12px rgba(28, 25, 23, 0.1);
     }
+    
     .download-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 12px 32px rgba(255, 140, 0, 0.4);
+      background: var(--accent);
+      transform: translateY(-4px);
+      box-shadow: 0 12px 24px rgba(232, 93, 4, 0.25);
     }
+    
     .hint {
-      font-size: 12px;
-      color: #A09080;
-      margin-top: 16px;
-      font-weight: 600;
+      font-size: 14px;
+      color: var(--text-muted);
+      margin-top: 24px;
+      font-weight: 300;
+      transition: opacity 0.3s ease;
     }
   </style>
 </head>
 <body>
   <div class="card">
+    <div class="graphic-container">
+      <div class="graphic-ring"></div>
+      <div class="graphic">🍷</div>
+    </div>
+    
     <div class="logo">Meet<span>Over</span>Meal</div>
-    <div class="subtitle">Dine Together · Meet Over Meals</div>
-    <div class="spinner" id="spinner"></div>
-    <div class="status" id="status">Opening MeetOverMeal...</div>
-    <a class="download-btn" id="download-btn" href="https://apps.apple.com/us/app/meetovermeal/id6762139752" style="display:none;">
-      Download MeetOverMeal
-    </a>
-    <div class="hint" id="hint"></div>
+    <div class="subtitle">Dine together &middot; connect</div>
+    
+    <div class="status-container">
+      <div class="spinner" id="spinner"></div>
+      <div class="status" id="status">Connecting to your meetup...</div>
+      
+      <a class="download-btn" id="download-btn" href="https://apps.apple.com/us/app/meetovermeal/id6762139752">
+        Get the App
+      </a>
+    </div>
+    
+    <div class="hint" id="hint">You'll be seamlessly redirected to the app.</div>
   </div>
 
   <script>
@@ -118,9 +236,9 @@
         // Set a timeout — if the app doesn't open in 2.5 seconds, show download button
         const timer = setTimeout(function() {
           document.getElementById('spinner').style.display = 'none';
-          document.getElementById('status').textContent = 'Don\'t have MeetOverMeal yet?';
+          document.getElementById('status').textContent = 'Ready to join the meetup?';
           document.getElementById('download-btn').style.display = 'inline-block';
-          document.getElementById('hint').textContent = 'Download the app and your meetup will open automatically.';
+          document.getElementById('hint').textContent = 'Download the app to secure your seat.';
         }, 2500);
 
         // When page becomes hidden (app opened), clear the timer

@@ -3,66 +3,689 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MeetOverMeal — Dine Together, Meet Over Meals</title>
-  <meta name="description" content="MeetOverMeal is a social dining app that connects people through shared meals at local restaurants.">
+  <title>MeetOverMeal — Never Eat Alone Again</title>
+  <meta name="description" content="MeetOverMeal is the social dining app that connects you with people over food. A $5 deposit means no more flaking — real meetups, real connections, real meals.">
+  <meta name="keywords" content="social dining app, meet people over food, dinner with strangers, meal buddy, anti-flaking app, foodie meetup, dining companion">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="MeetOverMeal — Never Eat Alone Again">
+  <meta property="og:description" content="The social dining app with a $5 accountability deposit. Find restaurants, match with someone new, and actually show up.">
+  <meta property="og:image" content="https://meetovermeal.org/assets/share-card.png">
+  <meta property="og:url" content="https://meetovermeal.org">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="MeetOverMeal">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="MeetOverMeal — Never Eat Alone Again">
+  <meta name="twitter:description" content="The social dining app with a $5 accountability deposit. No more flaking.">
+  <meta name="twitter:image" content="https://meetovermeal.org/assets/share-card.png">
+
+  <!-- JSON-LD Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "MeetOverMeal",
+    "operatingSystem": "iOS",
+    "applicationCategory": "SocialNetworkingApplication",
+    "description": "Social dining app that connects people through shared meals with a $5 accountability deposit.",
+    "url": "https://meetovermeal.org",
+    "downloadUrl": "https://apps.apple.com/us/app/meetovermeal/id6762139752",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    }
+  }
+  </script>
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
   <style>
+    :root {
+      --bg: #FAF7F2;
+      --bg-warm: #F5F0E8;
+      --card: #FFFFFF;
+      --text: #1C1917;
+      --text-secondary: #78716C;
+      --text-muted: #A8A29E;
+      --accent: #E8872D;
+      --accent-deep: #D97706;
+      --accent-glow: rgba(232, 135, 45, 0.12);
+      --border: #F0E8E0;
+      --deposit-green: #16A34A;
+    }
+
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: 'Inter', -apple-system, sans-serif; color: #2C241B; background: #FAF7F2; }
-    .hero { text-align: center; padding: 80px 24px 60px; }
-    .hero h1 { font-size: 48px; font-weight: 900; letter-spacing: -1px; color: #2C241B; }
-    .hero h1 span { color: #F59E0B; }
-    .hero p { font-size: 18px; color: #8B7E6E; margin-top: 16px; max-width: 500px; margin-left: auto; margin-right: auto; line-height: 1.6; }
-    .hero .tagline { font-size: 14px; text-transform: uppercase; letter-spacing: 2px; color: #C4B8AC; font-weight: 600; margin-bottom: 16px; }
-    .features { display: flex; gap: 24px; justify-content: center; flex-wrap: wrap; padding: 0 24px 60px; max-width: 900px; margin: 0 auto; }
-    .features .card { background: #fff; border-radius: 20px; padding: 32px; flex: 1; min-width: 240px; max-width: 280px; box-shadow: 0 4px 24px rgba(0,0,0,0.04); border: 1px solid #F0E8E0; }
-    .features .card .icon { font-size: 32px; margin-bottom: 12px; }
-    .features .card h3 { font-size: 18px; font-weight: 700; margin-bottom: 8px; }
-    .features .card p { font-size: 14px; color: #8B7E6E; line-height: 1.5; }
-    .legal-links { text-align: center; padding: 40px 24px; border-top: 1px solid #F0E8E0; }
-    .legal-links a { color: #F59E0B; text-decoration: none; font-weight: 600; margin: 0 16px; font-size: 14px; }
-    .legal-links a:hover { text-decoration: underline; }
-    .footer { text-align: center; padding: 24px; color: #C4B8AC; font-size: 13px; }
-    @media (max-width: 640px) {
-      .hero h1 { font-size: 32px; }
-      .features .card { min-width: 100%; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+      color: var(--text);
+      background: var(--bg);
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    /* ─── Noise texture ─── */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      opacity: 0.3;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ─── HERO ─── */
+    .hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 80px 24px 60px;
+      text-align: center;
+      background:
+        radial-gradient(ellipse 60% 50% at 20% 10%, rgba(232,135,45,0.06) 0%, transparent 60%),
+        radial-gradient(ellipse 50% 40% at 80% 90%, rgba(232,135,45,0.08) 0%, transparent 50%);
+      z-index: 1;
+    }
+
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 28px;
+      opacity: 0;
+      animation: fadeDown 0.8s 0.2s cubic-bezier(0.16,1,0.3,1) forwards;
+    }
+
+    .hero-eyebrow .dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(0.8); }
+    }
+
+    .hero h1 {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(42px, 8vw, 72px);
+      font-weight: 400;
+      line-height: 1.05;
+      letter-spacing: -1.5px;
+      color: var(--text);
+      margin-bottom: 24px;
+      opacity: 0;
+      animation: fadeDown 0.8s 0.35s cubic-bezier(0.16,1,0.3,1) forwards;
+    }
+
+    .hero h1 em {
+      font-style: italic;
+      color: var(--accent);
+    }
+
+    .hero-desc {
+      font-size: 18px;
+      line-height: 1.7;
+      color: var(--text-secondary);
+      max-width: 480px;
+      font-weight: 400;
+      margin-bottom: 44px;
+      opacity: 0;
+      animation: fadeDown 0.8s 0.5s cubic-bezier(0.16,1,0.3,1) forwards;
+    }
+
+    .hero-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      background: var(--text);
+      color: #fff;
+      font-size: 16px;
+      font-weight: 600;
+      padding: 18px 40px;
+      border-radius: 100px;
+      text-decoration: none;
+      transition: all 0.4s cubic-bezier(0.16,1,0.3,1);
+      box-shadow: 0 8px 32px rgba(28,25,23,0.15);
+      opacity: 0;
+      animation: fadeDown 0.8s 0.65s cubic-bezier(0.16,1,0.3,1) forwards;
+    }
+
+    .hero-cta:hover {
+      background: var(--accent);
+      transform: translateY(-3px);
+      box-shadow: 0 16px 48px rgba(232,135,45,0.3);
+    }
+
+    .hero-cta svg { width: 20px; height: 20px; }
+
+    .hero-badge {
+      margin-top: 16px;
+      font-size: 13px;
+      color: var(--text-muted);
+      font-weight: 500;
+      opacity: 0;
+      animation: fadeDown 0.8s 0.8s cubic-bezier(0.16,1,0.3,1) forwards;
+    }
+
+    .scroll-hint {
+      position: absolute;
+      bottom: 32px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      opacity: 0;
+      animation: fadeDown 0.8s 1.2s cubic-bezier(0.16,1,0.3,1) forwards;
+    }
+
+    .scroll-hint span {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .scroll-arrow {
+      width: 20px;
+      height: 20px;
+      border-right: 2px solid var(--text-muted);
+      border-bottom: 2px solid var(--text-muted);
+      transform: rotate(45deg);
+      animation: bounceArrow 2s ease-in-out infinite;
+    }
+
+    @keyframes bounceArrow {
+      0%, 100% { transform: rotate(45deg) translateY(0); }
+      50% { transform: rotate(45deg) translateY(6px); }
+    }
+
+    @keyframes fadeDown {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ─── HOW IT WORKS ─── */
+    .how-section {
+      position: relative;
+      z-index: 1;
+      padding: 100px 24px;
+      background: var(--bg-warm);
+    }
+
+    .section-inner {
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    .section-eyebrow {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 12px;
+    }
+
+    .section-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(32px, 5vw, 48px);
+      font-weight: 400;
+      line-height: 1.1;
+      letter-spacing: -0.5px;
+      color: var(--text);
+      margin-bottom: 64px;
+    }
+
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    .step {
+      background: var(--card);
+      border-radius: 24px;
+      padding: 36px 28px;
+      border: 1px solid var(--border);
+      position: relative;
+      transition: all 0.4s cubic-bezier(0.16,1,0.3,1);
+    }
+
+    .step:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 24px 64px rgba(28,25,23,0.06);
+    }
+
+    .step-number {
+      font-family: 'DM Serif Display', serif;
+      font-size: 56px;
+      font-weight: 400;
+      color: var(--accent-glow);
+      line-height: 1;
+      margin-bottom: 4px;
+      color: rgba(232,135,45,0.15);
+    }
+
+    .step-icon {
+      font-size: 36px;
+      margin-bottom: 16px;
+    }
+
+    .step h3 {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 10px;
+      color: var(--text);
+    }
+
+    .step p {
+      font-size: 15px;
+      line-height: 1.6;
+      color: var(--text-secondary);
+    }
+
+    /* ─── DEPOSIT / ACCOUNTABILITY ─── */
+    .deposit-section {
+      position: relative;
+      z-index: 1;
+      padding: 100px 24px;
+      background: var(--bg);
+    }
+
+    .deposit-card {
+      max-width: 800px;
+      margin: 0 auto;
+      background: var(--card);
+      border-radius: 32px;
+      padding: 60px 48px;
+      border: 1px solid var(--border);
+      display: flex;
+      gap: 48px;
+      align-items: center;
+      box-shadow: 0 32px 80px -16px rgba(28,25,23,0.06);
+    }
+
+    .deposit-visual {
+      flex-shrink: 0;
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #ECFDF5 0%, #D1FAE5 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .deposit-visual::after {
+      content: "";
+      position: absolute;
+      inset: -8px;
+      border-radius: 50%;
+      border: 2px dashed rgba(22,163,74,0.2);
+      animation: spin-slow 20s linear infinite;
+    }
+
+    @keyframes spin-slow {
+      to { transform: rotate(360deg); }
+    }
+
+    .deposit-amount {
+      font-family: 'DM Serif Display', serif;
+      font-size: 48px;
+      color: var(--deposit-green);
+    }
+
+    .deposit-content { flex: 1; }
+
+    .deposit-content h2 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 32px;
+      font-weight: 400;
+      line-height: 1.2;
+      margin-bottom: 16px;
+    }
+
+    .deposit-content p {
+      font-size: 16px;
+      line-height: 1.7;
+      color: var(--text-secondary);
+      margin-bottom: 20px;
+    }
+
+    .deposit-stats {
+      display: flex;
+      gap: 32px;
+    }
+
+    .deposit-stat {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--deposit-green);
+    }
+
+    .deposit-stat .check {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: #ECFDF5;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+    }
+
+    /* ─── FEATURES ─── */
+    .features-section {
+      position: relative;
+      z-index: 1;
+      padding: 100px 24px;
+      background: var(--bg-warm);
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+      max-width: 720px;
+      margin: 0 auto;
+    }
+
+    .feature-card {
+      background: var(--card);
+      border-radius: 24px;
+      padding: 32px 28px;
+      border: 1px solid var(--border);
+      transition: all 0.4s cubic-bezier(0.16,1,0.3,1);
+    }
+
+    .feature-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 20px 48px rgba(28,25,23,0.05);
+    }
+
+    .feature-icon {
+      font-size: 28px;
+      margin-bottom: 14px;
+    }
+
+    .feature-card h3 {
+      font-size: 17px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .feature-card p {
+      font-size: 14px;
+      line-height: 1.6;
+      color: var(--text-secondary);
+    }
+
+    /* ─── CTA BANNER ─── */
+    .cta-section {
+      position: relative;
+      z-index: 1;
+      padding: 100px 24px;
+      background: var(--bg);
+      text-align: center;
+    }
+
+    .cta-inner {
+      max-width: 560px;
+      margin: 0 auto;
+    }
+
+    .cta-inner h2 {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(32px, 5vw, 44px);
+      font-weight: 400;
+      line-height: 1.15;
+      margin-bottom: 20px;
+    }
+
+    .cta-inner h2 em {
+      font-style: italic;
+      color: var(--accent);
+    }
+
+    .cta-inner p {
+      font-size: 16px;
+      line-height: 1.6;
+      color: var(--text-secondary);
+      margin-bottom: 36px;
+    }
+
+    .cta-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--accent);
+      color: #fff;
+      font-size: 16px;
+      font-weight: 600;
+      padding: 18px 44px;
+      border-radius: 100px;
+      text-decoration: none;
+      transition: all 0.4s cubic-bezier(0.16,1,0.3,1);
+      box-shadow: 0 8px 32px rgba(232,135,45,0.25);
+    }
+
+    .cta-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 16px 48px rgba(232,135,45,0.35);
+    }
+
+    /* ─── FOOTER ─── */
+    footer {
+      position: relative;
+      z-index: 1;
+      padding: 48px 24px;
+      border-top: 1px solid var(--border);
+      text-align: center;
+    }
+
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 32px;
+      margin-bottom: 20px;
+    }
+
+    .footer-links a {
+      font-size: 14px;
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+
+    .footer-links a:hover { color: var(--accent); }
+
+    .footer-copy {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    /* ─── Responsive ─── */
+    @media (max-width: 768px) {
+      .steps { grid-template-columns: 1fr; gap: 16px; }
+      .deposit-card {
+        flex-direction: column;
+        text-align: center;
+        padding: 40px 28px;
+        gap: 28px;
+      }
+      .deposit-stats { justify-content: center; flex-wrap: wrap; }
+      .features-grid { grid-template-columns: 1fr; }
+      .hero { padding: 60px 20px 80px; }
+      .hero-desc { font-size: 16px; }
     }
   </style>
 </head>
 <body>
-  <div class="hero">
-    <p class="tagline">Dine Together · Meet Over Meals</p>
-    <h1>Meet<span>Over</span>Meal</h1>
-    <p>A social dining app that connects people through shared meals at local restaurants. Find a table, match with someone new, and enjoy great food together.</p>
-  </div>
 
-  <div class="features">
-    <div class="card">
-      <div class="icon">🍽️</div>
-      <h3>Find a Table</h3>
-      <p>Browse nearby restaurants and discover active meetups at places you love.</p>
+  <!-- ═══════════════ HERO ═══════════════ -->
+  <section class="hero" id="top">
+    <div class="hero-eyebrow">
+      <span class="dot"></span>
+      Social Dining, Reimagined
     </div>
-    <div class="card">
-      <div class="icon">🤝</div>
-      <h3>Match & Meet</h3>
-      <p>Apply to join a meetup or host your own. A $5 deposit ensures everyone shows up.</p>
-    </div>
-    <div class="card">
-      <div class="icon">💬</div>
-      <h3>Chat & Connect</h3>
-      <p>Break the ice before you meet. Share photos, voice messages, and make new friends.</p>
-    </div>
-  </div>
 
-  <div class="legal-links">
-    <a href="/privacy">Privacy Policy</a>
-    <a href="/terms">Terms of Service</a>
-    <a href="mailto:feedback@meetovermeal.org">Contact Us</a>
-  </div>
+    <h1>Never Eat<br><em>Alone</em> Again</h1>
 
-  <div class="footer">
-    &copy; 2026 MeetOverMeal. All rights reserved.
-  </div>
+    <p class="hero-desc">
+      MeetOverMeal connects you with people over food at local restaurants.
+      A $5 deposit means everyone shows up — no more flaking.
+    </p>
+
+    <a class="hero-cta" href="https://apps.apple.com/us/app/meetovermeal/id6762139752" id="hero-download">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83"/><path d="M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11"/></svg>
+      Download for iOS
+    </a>
+
+    <p class="hero-badge">Free on the App Store</p>
+
+    <div class="scroll-hint">
+      <span>Learn more</span>
+      <div class="scroll-arrow"></div>
+    </div>
+  </section>
+
+  <!-- ═══════════════ HOW IT WORKS ═══════════════ -->
+  <section class="how-section">
+    <div class="section-inner">
+      <p class="section-eyebrow">How It Works</p>
+      <h2 class="section-title">Three steps to your<br>next great meal</h2>
+
+      <div class="steps">
+        <div class="step">
+          <div class="step-number">01</div>
+          <div class="step-icon">🔍</div>
+          <h3>Find a Restaurant</h3>
+          <p>Browse nearby restaurants in the Hall. See who's hosting meetups and when — filter by cuisine, distance, or time.</p>
+        </div>
+        <div class="step">
+          <div class="step-number">02</div>
+          <div class="step-icon">🤝</div>
+          <h3>Host or Join</h3>
+          <p>Create a meetup at your favorite spot, or apply to join someone else's. A $5 refundable deposit locks you in.</p>
+        </div>
+        <div class="step">
+          <div class="step-number">03</div>
+          <div class="step-icon">📍</div>
+          <h3>Check In & Dine</h3>
+          <p>Show up, check in at the restaurant, and your deposit is refunded. A cute virtual pet is born to celebrate your connection!</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════ DEPOSIT SECTION ═══════════════ -->
+  <section class="deposit-section">
+    <div class="section-inner">
+      <div class="deposit-card">
+        <div class="deposit-visual">
+          <span class="deposit-amount">$5</span>
+        </div>
+        <div class="deposit-content">
+          <p class="section-eyebrow">The Accountability Engine</p>
+          <h2>No more ghosting.<br>No more flaking.</h2>
+          <p>
+            Every meetup requires a $5 refundable deposit. Show up and check in — you get it back.
+            Don't show? Your dining partner keeps your deposit as compensation for their time.
+          </p>
+          <div class="deposit-stats">
+            <div class="deposit-stat">
+              <span class="check">✓</span>
+              Fully refunded on check-in
+            </div>
+            <div class="deposit-stat">
+              <span class="check">✓</span>
+              Powered by Stripe
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════ FEATURES ═══════════════ -->
+  <section class="features-section">
+    <div class="section-inner">
+      <p class="section-eyebrow">Everything You Need</p>
+      <h2 class="section-title">More than just dinner</h2>
+
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">💬</div>
+          <h3>Rich Chat</h3>
+          <p>Text, photos, and voice messages. Break the ice before you meet in person.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🐱</div>
+          <h3>Virtual Pets</h3>
+          <p>Every successful meetup births a pet that guards your friendship. Feed it to keep chatting.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🌍</div>
+          <h3>15+ Languages</h3>
+          <p>From English to Arabic, Japanese to Hindi. Dine with anyone, anywhere in the world.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">⚡</div>
+          <h3>Boosters & Super Likes</h3>
+          <p>Pin your meetup to the top or make your application glow. Stand out from the crowd.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════ CTA ═══════════════ -->
+  <section class="cta-section">
+    <div class="cta-inner">
+      <h2>Your next <em>great meal</em> is one tap away</h2>
+      <p>Download MeetOverMeal for free and discover why thousands of people are choosing to dine together instead of alone.</p>
+      <a class="cta-btn" href="https://apps.apple.com/us/app/meetovermeal/id6762139752">
+        <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83"/><path d="M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11"/></svg>
+        Get MeetOverMeal
+      </a>
+    </div>
+  </section>
+
+  <!-- ═══════════════ FOOTER ═══════════════ -->
+  <footer>
+    <div class="footer-links">
+      <a href="/privacy">Privacy Policy</a>
+      <a href="/terms">Terms of Service</a>
+      <a href="mailto:feedback@meetovermeal.org">Contact</a>
+    </div>
+    <p class="footer-copy">&copy; 2026 MeetOverMeal. All rights reserved.</p>
+  </footer>
+
 </body>
 </html>

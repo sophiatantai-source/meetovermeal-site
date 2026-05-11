@@ -228,6 +228,46 @@
       transform: translateX(-50%) translateY(0);
     }
 
+    .wechat-mask {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.85);
+      z-index: 9999;
+      display: none;
+      flex-direction: column;
+      align-items: flex-end;
+      padding: 24px 32px;
+      color: #fff;
+    }
+
+    .wechat-mask-content {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      text-align: right;
+      animation: fadeUp 0.4s ease forwards;
+    }
+
+    .wechat-arrow {
+      width: 64px;
+      height: 64px;
+      margin-bottom: 16px;
+      transform: scaleX(-1) rotate(45deg);
+      animation: point-up 1.5s infinite ease-in-out;
+    }
+
+    @keyframes point-up {
+      0%, 100% { transform: scaleX(-1) rotate(45deg) translate(0, 0); }
+      50% { transform: scaleX(-1) rotate(45deg) translate(-10px, -10px); }
+    }
+
+    .wechat-text {
+      font-size: 18px;
+      line-height: 1.6;
+      font-weight: 500;
+      font-family: -apple-system, sans-serif;
+    }
+
     .badge {
       display: inline-flex;
       align-items: center;
@@ -317,17 +357,17 @@
           // In-app browsers block custom schemes and Universal Links.
           // Guide user to open in Safari where Universal Links work.
           actionsEl.innerHTML =
-            '<a class="open-app-btn" id="open-btn" href="' + universalLink + '">Open in Safari</a>' +
+            '<a class="open-app-btn" id="open-btn" href="#">Open in App</a>' +
             '<span class="divider">or</span>' +
             '<a class="download-btn" id="dl-btn" href="' + APP_STORE_URL + '">Download on App Store</a>';
 
-          hintEl.innerHTML = 'Tap <strong>Open in Safari</strong> to launch the app.<br>If prompted, choose "Open in Safari" or tap ··· → Open in Safari.';
+          hintEl.innerHTML = 'Tap <strong>Open in App</strong> to launch MeetOverMeal.<br>If nothing happens, you may need to open this page in Safari.';
 
           var openBtn = document.getElementById('open-btn');
           openBtn.addEventListener('click', function(e) {
-            // In WeChat, we can try to break out via a Safari redirect
-            // WeChat blocks window.open but allows location.href for http(s) URLs
-            // The Universal Link will then work from Safari
+            e.preventDefault();
+            // Show overlay mask telling user to click top right ...
+            document.getElementById('wechat-mask').style.display = 'flex';
           });
         } else {
           // Normal browser (Safari, Chrome) — try custom scheme + fallback
@@ -388,6 +428,16 @@
         // App opened — nothing to do
       });
     })();
-  </script>
+  <div id="wechat-mask" class="wechat-mask" onclick="this.style.display='none'">
+    <div class="wechat-mask-content">
+      <svg class="wechat-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M5 12h14"></path>
+        <path d="m12 5 7 7-7 7"></path>
+      </svg>
+      <div class="wechat-text">
+        Tap the <strong>···</strong> button<br>in the top right corner<br>and select <strong>Open in Safari</strong><br>to launch the app.
+      </div>
+    </div>
+  </div>
 </body>
 </html>

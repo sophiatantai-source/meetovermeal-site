@@ -285,6 +285,10 @@
       var APP_STORE_URL = 'https://apps.apple.com/us/app/meetovermeal/id6762139752';
       var CUSTOM_SCHEME = 'meetovermeal://';
 
+      // Detect in-app browsers (WeChat, LINE, Instagram, Facebook, etc.)
+      var ua = navigator.userAgent || '';
+      var isInAppBrowser = /MicroMessenger|WeChat|Line\/|FBAN|FBAV|Instagram|Twitter/i.test(ua);
+
       // Extract meetup ID from query string
       var params = new URLSearchParams(window.location.search);
       var meetupId = params.get('id');
@@ -292,18 +296,6 @@
       var hintEl = document.getElementById('hint');
       var badgeEl = document.getElementById('badge');
       var badgeTextEl = document.getElementById('badge-text');
-
-      /**
-       * If this page loads, it means one of:
-       * 1. App is NOT installed (Universal Links didn't intercept)
-       * 2. User typed the URL directly into Safari address bar
-       * 3. User opened link from a context where Universal Links don't work
-       * 
-       * In all cases, we should:
-       * a) Try custom scheme as a secondary attempt to open the app
-       * b) Copy the deep link to clipboard for deferred deep linking
-       * c) Show download button as fallback
-       */
 
       if (meetupId) {
         var deepLink = CUSTOM_SCHEME + 'meetup?id=' + encodeURIComponent(meetupId);
@@ -319,37 +311,60 @@
           }
         } catch(e) {}
 
-        // Build action buttons
-        actionsEl.innerHTML =
-          '<a class="open-app-btn" id="open-btn" href="' + deepLink + '">Open in App</a>' +
-          '<span class="divider">or</span>' +
-          '<a class="download-btn" id="dl-btn" href="' + APP_STORE_URL + '">Download on App Store</a>';
+        if (isInAppBrowser) {
+          // In-app browsers block custom schemes and Universal Links.
+          // Guide user to open in Safari where Universal Links work.
+          actionsEl.innerHTML =
+            '<a class="open-app-btn" id="open-btn" href="' + universalLink + '">Open in Safari</a>' +
+            '<span class="divider">or</span>' +
+            '<a class="download-btn" id="dl-btn" href="' + APP_STORE_URL + '">Download on App Store</a>';
 
-        hintEl.innerHTML = 'If you already have the app, tap <strong>Open in App</strong>.<br>New here? Download first — the meetup link will be waiting for you.';
+          hintEl.innerHTML = 'Tap <strong>Open in Safari</strong> to launch the app.<br>If prompted, choose "Open in Safari" or tap ··· → Open in Safari.';
 
-        // When "Open in App" is clicked, try custom scheme.
-        // If it fails (app not installed), the page stays visible.
-        var openBtn = document.getElementById('open-btn');
-        openBtn.addEventListener('click', function(e) {
-          e.preventDefault();
+          var openBtn = document.getElementById('open-btn');
+          openBtn.addEventListener('click', function(e) {
+            // In WeChat, we can try to break out via a Safari redirect
+            // WeChat blocks window.open but allows location.href for http(s) URLs
+            // The Universal Link will then work from Safari
+          });
+        } else {
+          // Normal browser (Safari, Chrome) — try custom scheme + fallback
+          actionsEl.innerHTML =
+            '<a class="open-app-btn" id="open-btn" href="' + deepLink + '">Open in App</a>' +
+            '<span class="divider">or</span>' +
+            '<a class="download-btn" id="dl-btn" href="' + APP_STORE_URL + '">Download on App Store</a>';
 
-          // Copy to clipboard again just in case
-          try {
-            if (navigator.clipboard && navigator.clipboard.writeText) {
-              navigator.clipboard.writeText(deepLink).catch(function() {});
-            }
-          } catch(ex) {}
+          hintEl.innerHTML = 'If you already have the app, tap <strong>Open in App</strong>.<br>New here? Download first — the meetup link will be waiting for you.';
 
-          // Try opening via custom scheme
-          window.location.href = deepLink;
+          var openBtn = document.getElementById('open-btn');
+          openBtn.addEventListener('click', function(e) {
+            e.preventDefault();
 
-          // If app didn't open after 2s, show toast about clipboard
-          setTimeout(function() {
-            if (!document.hidden) {
-              showToast();
-            }
-          }, 2000);
-        });
+            // Copy to clipboard again just in case
+            try {
+              if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(deepLink).catch(function() {});
+              }
+            } catch(ex) {}
+
+            // Strategy 1: Try custom scheme via hidden iframe (non-blocking)
+            var iframe = document.createElement('iframe');
+            iframe.style.display = 'none';
+            iframe.src = deepLink;
+            document.body.appendChild(iframe);
+            setTimeout(function() { document.body.removeChild(iframe); }, 2000);
+
+            // Strategy 2: Also set location to custom scheme
+            window.location.href = deepLink;
+
+            // If app didn't open after 1.5s, redirect to App Store
+            setTimeout(function() {
+              if (!document.hidden) {
+                showToast();
+              }
+            }, 1500);
+          });
+        }
 
       } else {
         // No meetup ID — generic landing
